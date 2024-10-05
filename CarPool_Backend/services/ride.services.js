@@ -40,8 +40,9 @@ const rideServices = {
                 throw new customError(403, "Only publisher can update ride details")
             }
             updateData.updatedDate = new Date();
-            const updatedRide = await Ride.findByIdAndUpdate(rideId, updateData);
-            return {success: true, ride: updatedRide}
+            await Ride.findByIdAndUpdate(rideId, updateData);
+            const updatedRide = {...isValidRide, ...updateData};
+            return {success: true, ride: updatedRide};
         } catch (error) {
             throw new customError(error.statusCode || 400, error.message || 'Error while updating a ride');
         }
