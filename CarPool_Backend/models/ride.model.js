@@ -31,12 +31,27 @@ const rideSchema = new mongoose.Schema({
     ],
     startTime: Date,
     endTime: Date,
-    totalSeats: Number,
-    bookedSeats: Number,
+    totalSeats: {
+        type: Number,
+        default: 0
+    },
+    bookedSeats: {
+        type: Number,
+        default: 0
+    },
     passengers: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            primaryPassenger:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            allPassengers: [
+                {
+                    name: String,
+                    age: Number,
+                    gender: String
+                }
+            ]
         }
     ],
     status:{

@@ -40,11 +40,47 @@ const rideServices = {
                 throw new customError(403, "Only publisher can update ride details")
             }
             updateData.updatedDate = new Date();
+            
             await Ride.findByIdAndUpdate(rideId, updateData);
-            const updatedRide = {...isValidRide, ...updateData};
+            const updatedRide = Object.assign(isValidRide, updateData);
             return {success: true, ride: updatedRide};
         } catch (error) {
             throw new customError(error.statusCode || 400, error.message || 'Error while updating a ride');
+        }
+    },
+    updatePassengers: async(userId, rideId, passengerArray)=>{
+        try {
+            const isValidUser = await userServices.findByUserId(userId);
+        if (!isValidUser) {
+          throw new customError(404, "User not found");
+        }
+        const isValidRide = await Ride.findById(rideId);
+        if (!isValidRide) {
+          throw new customError(404, "Ride not found");
+        }
+        const allPassengers = isValidRide.passengers.map((passenger)=>{
+            if (passenger.primaryPassenger == userId) {
+                passenger.allPassengers = passengerArray;
+                return passenger;
+            }
+            return passenger;
+        });
+        if (!allPassengers.some(passenger=>passenger.primaryPassenger==userId)) {
+            allPassengers.push({primaryPassenger: userId, allPassengers: passengerArray})
+        }
+        isValidRide.passengers = allPassengers;
+        await Ride.updateOne({_id: rideId}, isValidRide);
+        return {success: true, ride: isValidRide}
+        } catch (error) {
+            throw new customError(error.statusCode || 400, error.message || 'Error while updating passengers inside ride');
+        }
+    },
+    getRideById: async(rideId)=>{
+        try {
+            const ride = await Ride.findById(rideId);
+            return {success: true, ride: ride};
+        } catch (error) {
+            throw new customError(error.statusCode || 400, error.message || 'Error while getting rides');
         }
     },
     getDriverRides: async(userId)=>{
@@ -65,7 +101,7 @@ const rideServices = {
             if (!isValidUser) {
                 throw new customError(404, "User not found");
             }
-            const rides = await Ride.find({passengers:{$in:[userId]}});
+            const rides = await Ride.find({passengers: {$elemMatch:{primaryPassenger:userId}}});
             return {success: true, rides: rides}
         } catch (error) {
             throw new customError(error.statusCode || 400, error.message || 'Error while getting rides');
