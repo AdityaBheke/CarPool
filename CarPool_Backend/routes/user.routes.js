@@ -15,6 +15,10 @@ userRouter.post('/signin', (req, res, next)=>{
 userRouter.get('/',auth, (req, res, next)=>{
     userControllerObj.findByUserId(req, res, next);
 })
-
-
+userRouter.post('/edit/:id',auth, (req, res, next)=>{
+    userControllerObj.updateUser(req, res, next);
+})
+userRouter.get('/delete/:id',auth, (req, res, next)=>{
+    userControllerObj.removeUser(req, res, next);
+})
 module.exports = userRouter;

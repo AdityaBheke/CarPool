@@ -42,6 +42,36 @@ const userServices = {
         } catch (error) {
             throw new customError(error.statusCode || 400, error.message || 'Error while fetching user by id');
         }
+    },
+    updateUser: async(userId, userData)=>{
+        try {
+            // const updatedUser = await User.findByIdAndUpdate(
+            //     userId,
+            //     userData,
+            //     { new: true, runValidators: true }
+            // )
+            const user = await User.findById(userId);
+            if (!user) {
+                throw new customError(404, "User not found");
+            }
+            user.set(userData);
+            const updatedUser = await user.save()
+            return {success: true, user: updatedUser};
+        } catch (error) {
+            throw new customError(error.statusCode || 400, error.message || 'Error while updating user');
+        }
+    },
+    removeUser: async(userId)=>{
+        try {
+            const deletedUser = await User.findByIdAndDelete(userId);
+        
+            if (!deletedUser) {
+                throw new customError(404, "User not found");
+            }
+            return {success: true, message : "User removed successfully"};
+        } catch (error) {
+            throw new customError(error.statusCode || 400, error.message || 'Error while updating user');
+        }
     }
 }
 

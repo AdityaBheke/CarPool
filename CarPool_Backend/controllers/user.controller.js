@@ -41,6 +41,26 @@ class userController{
             next(error);
         }
     }
+
+    async updateUser(req, res, next) {
+        try {
+            const userId = req.userId;
+            const updateUserData = req.body;
+            const result = await userServices.updateUser(userId, updateUserData);
+            res.status(201).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+    async removeUser(req, res, next) {
+        try {
+            const userId = req.userId;
+            const result = await userServices.removeUser(userId);
+            res.status(201).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = userController;
