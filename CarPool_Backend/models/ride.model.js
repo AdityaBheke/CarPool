@@ -31,11 +31,19 @@ const rideSchema = new mongoose.Schema({
     ],
     startTime: Date,
     endTime: Date,
+    farePerPerson: {
+        type: Number,
+        default:0
+    },
     totalSeats: {
         type: Number,
         default: 0
     },
     bookedSeats: {
+        type: Number,
+        default: 0
+    },
+    availableSeats:{
         type: Number,
         default: 0
     },
@@ -51,7 +59,11 @@ const rideSchema = new mongoose.Schema({
                     age: Number,
                     gender: String
                 }
-            ]
+            ],
+            paymentStatus: {
+                type: Boolean,
+                default: false
+            }
         }
     ],
     status:{

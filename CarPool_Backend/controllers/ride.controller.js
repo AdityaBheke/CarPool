@@ -66,19 +66,10 @@ class rideController{
             next(error);
         }
     }
-    async getPassengerRides(req, res, next){
+    async getUserRides(req, res, next){
         try {
             const userId = req.userId;
-            const result = await rideServices.getPassengerRides(userId);
-            res.status(200).json(result);
-        } catch (error) {
-            next(error);
-        }
-    }
-    async getDriverRides(req, res, next){
-        try {
-            const userId = req.userId;
-            const result = await rideServices.getDriverRides(userId);
+            const result = await rideServices.getRidesByUserId(userId);
             res.status(200).json(result);
         } catch (error) {
             next(error);

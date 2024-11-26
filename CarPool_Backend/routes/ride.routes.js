@@ -20,14 +20,11 @@ rideRouter.put('/finish/:id', auth, (req, res, next)=>{
 rideRouter.put('/cancel/:id', auth, (req, res, next)=>{
     rideControllerObj.cancelRide(req, res, next);
 });
-rideRouter.get('/', (req, res, next)=>{
+rideRouter.get('/active', (req, res, next)=>{
     rideControllerObj.getActiveRides(req, res, next);
 });
-rideRouter.get('/passenger', auth, (req, res, next)=>{
-    rideControllerObj.getPassengerRides(req, res, next);
-});
-rideRouter.get('/driver', auth, (req, res, next)=>{
-    rideControllerObj.getDriverRides(req, res, next);
+rideRouter.get('/', auth, (req, res, next)=>{
+    rideControllerObj.getUserRides(req, res, next);
 });
 
 
