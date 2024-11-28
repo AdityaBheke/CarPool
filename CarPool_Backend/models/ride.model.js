@@ -70,6 +70,11 @@ const rideSchema = new mongoose.Schema({
         type: String,
         enum: ['active','started','completed', 'cancelled']
     },
+    vehicleDetails:{
+        vehicleName: String,
+        vehicleColor: String,
+        vehiclePlate: String
+    },
     createdDate: Date,
     updatedDate: Date
 });
