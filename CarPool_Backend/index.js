@@ -7,6 +7,7 @@ const rideRouter = require('./routes/ride.routes.js');
 const { errorHandler } = require('./middlewares/errorhandler.middleware');
 const cookieParser = require('cookie-parser');
 const bookingRouter = require('./routes/booking.routes.js');
+const mapRouter = require('./routes/map.route.js');
 
 
 require('dotenv').config(); 
@@ -34,6 +35,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRouter);
 app.use('/api/ride', rideRouter);
 app.use('/api/booking', bookingRouter);
+app.use('/api/map', mapRouter);
 
 app.use((req,res)=>{
     res.status(404).send('API not found.')
