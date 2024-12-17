@@ -1,5 +1,5 @@
 const express = require('express');
-const rideController = require('./../controllers/ride.controller.js');
+const rideController = require('../controllers/ride.controller.js');
 const auth = require('../middlewares/auth.middleware.js');
 
 const rideRouter = express.Router();

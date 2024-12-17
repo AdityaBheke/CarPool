@@ -4,12 +4,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/user.routes.js');
 const rideRouter = require('./routes/ride.routes.js');
-const { errorHandler } = require('./middlewares/errorhandler.middleware');
+const { errorHandler } = require('./middlewares/errorhandler.middleware.js');
 const cookieParser = require('cookie-parser');
 const bookingRouter = require('./routes/booking.routes.js');
 const mapRouter = require('./routes/map.route.js');
 
-
+// Env variables
 require('dotenv').config(); 
 const app = express();
 const port = process.env.PORT || 3000;

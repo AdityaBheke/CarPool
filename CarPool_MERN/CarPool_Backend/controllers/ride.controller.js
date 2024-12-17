@@ -1,4 +1,4 @@
-const rideServices = require('./../services/ride.services');
+const rideServices = require('../services/ride.services');
 
 // const {customError} = require('./../middlewares/errorhandler.middleware');
 

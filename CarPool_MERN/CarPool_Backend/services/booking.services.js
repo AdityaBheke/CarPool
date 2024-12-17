@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const {customError} = require('./../middlewares/errorhandler.middleware')
-const userServices = require('./../services/user.services')
-const bookingSchema = require('./../models/booking.model');
+const {customError} = require('../middlewares/errorhandler.middleware')
+const userServices = require('./user.services')
+const bookingSchema = require('../models/booking.model');
 const rideServices = require('./ride.services');
 
 const Booking = mongoose.model("Booking", bookingSchema);

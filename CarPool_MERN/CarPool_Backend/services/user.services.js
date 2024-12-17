@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const userSchema = require('./../models/user.model.js');
+const userSchema = require('../models/user.model.js');
 const { customError } = require('../middlewares/errorhandler.middleware.js');
 
 

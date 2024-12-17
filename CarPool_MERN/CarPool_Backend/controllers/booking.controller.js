@@ -1,4 +1,4 @@
-const bookingServices = require('./../services/booking.services');
+const bookingServices = require('../services/booking.services');
 
 class BookingController{
     async bookRide(req, res, next){

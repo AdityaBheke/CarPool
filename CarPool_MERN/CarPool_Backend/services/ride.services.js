@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const {customError} = require('./../middlewares/errorhandler.middleware')
-const userServices = require('./../services/user.services')
-const rideSchema = require('./../models/ride.model');
+const {customError} = require('../middlewares/errorhandler.middleware')
+const userServices = require('./user.services')
+const rideSchema = require('../models/ride.model');
 
 
 const Ride = mongoose.model('Ride',rideSchema);

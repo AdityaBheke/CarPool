@@ -1,4 +1,4 @@
-const mapServices = require("./../services/map.service");
+const mapServices = require("../services/map.service");
 
 class MapController{
     async getGeocodes(req, res, next){

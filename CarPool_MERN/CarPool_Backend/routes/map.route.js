@@ -1,5 +1,5 @@
 const express = require("express");
-const MapController = require('./../controllers/map.controller');
+const MapController = require('../controllers/map.controller');
 const auth = require('../middlewares/auth.middleware');
 
 const mapRouter = express.Router();

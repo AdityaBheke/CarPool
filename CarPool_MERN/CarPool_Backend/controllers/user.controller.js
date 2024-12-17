@@ -1,5 +1,5 @@
 const { customError } = require('../middlewares/errorhandler.middleware.js');
-const userServices = require('./../services/user.services.js');
+const userServices = require('../services/user.services.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
