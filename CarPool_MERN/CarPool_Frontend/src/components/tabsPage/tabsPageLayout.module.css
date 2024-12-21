@@ -1,0 +1,34 @@
+
+.tabsPageLayout{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .pageContent{
+    height: 100%;
+    flex-grow: 1;
+  }
+  .tabBar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px -3px 13px 9px var(--background);
+  }
+  .tabBar a{
+    text-decoration: none;
+  }
+  .tabActive{
+    color: var(--highlight);
+  }
+  .tabInactive{
+    color: var(--accent);
+  }
+  
+  .tab{
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
