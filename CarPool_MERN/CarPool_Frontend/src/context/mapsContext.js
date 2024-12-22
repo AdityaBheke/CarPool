@@ -22,7 +22,6 @@ export function MapContextProvider({children}){
                 input:place
             }})
             const data = response.data;
-            console.log(data)
             if (data.success) {
                 setPredictions(data.result.predictions)
             }

@@ -8,10 +8,10 @@ export default function PredictionItem({prediction, type}){
     const navigate = useNavigate();
     const handleOnClick = (e)=>{
         if (type==='origin') {
-            setSearchData({...searchData, from: prediction.description})
+            setSearchData({...searchData, from: prediction.mainText})
             navigate("/")
         } else if(type==='destination'){
-            setSearchData({...searchData, to: prediction.description})
+            setSearchData({...searchData, to: prediction.mainText})
             navigate("/")
         }else{
             return
@@ -19,6 +19,7 @@ export default function PredictionItem({prediction, type}){
         clear();
     }
     return <div className={styles.predictionItem} onClick={handleOnClick}>
-        <div className={styles.placeName}>{prediction.description}</div>
+        <div className={styles.placeName}>{prediction.mainText}</div>
+        <div className={styles.placeDescription}>{prediction.description}</div>
     </div>
 }
