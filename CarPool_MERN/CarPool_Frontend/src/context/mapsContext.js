@@ -27,7 +27,7 @@ export function MapContextProvider({children}){
             }
             
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         }
     },1000);
 
