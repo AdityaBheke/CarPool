@@ -17,6 +17,13 @@ export default function SearchRide() {
     navigate('/rides')
   },[formData, searchRides, navigate])
 
+  const searchLocation = useCallback((e)=>{
+    if (e.target.id==='from') {
+      navigate('/searchOrigin');
+    } else if (e.target.id==='to') {
+      navigate('/searchDestination');
+    }
+  },[navigate])
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formItem}>
@@ -27,6 +34,7 @@ export default function SearchRide() {
         placeholder="Leaving from"
         value={formData.from}
         onChange={setFormData}
+        onClick={searchLocation}
         className={styles.formInput}
       />
       </div>
@@ -38,6 +46,7 @@ export default function SearchRide() {
         placeholder="Going to"
         value={formData.to}
         onChange={setFormData}
+        onClick={searchLocation}
         className={styles.formInput}
       />
       </div>

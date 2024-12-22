@@ -18,11 +18,12 @@ export function RideContextProvider({children}){
       });
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
+    // Set default date
     function setDate(){
         const [month, day, year] = new Date().toLocaleDateString().split("/");
         return `${year}-${month}-${day}`;
     }
-    
+    // Search and fetch Rides from backend
     const searchRides = async (criteria)=>{
         setSearchData(criteria);
         try {
@@ -33,11 +34,10 @@ export function RideContextProvider({children}){
             }
         } catch (error) {
             console.log(error);
-            
         }
     }
 
-    return <rideContext.Provider value={{rides, searchRides, searchData, setDate}}>
+    return <rideContext.Provider value={{rides, searchRides, searchData, setSearchData, setDate}}>
         {children}
     </rideContext.Provider>
 }

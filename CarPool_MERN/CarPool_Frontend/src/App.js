@@ -8,6 +8,8 @@ import RideHistory from './pages/rideHistory/RideHistory';
 import Profile from './pages/profile/Profile';
 import { RideContextProvider } from './context/rideContext';
 import RidesList from './pages/ridesList/RideList';
+import { MapContextProvider } from './context/mapsContext';
+import SearchLocation from './pages/searchLocation/SearchLocation';
 
 function App() {
   const browserRouter = createBrowserRouter([
@@ -49,13 +51,23 @@ function App() {
     {
       path: '/rides',
       element: <RidesList/>
+    },
+    {
+      path: '/searchOrigin',
+      element:<SearchLocation type={"origin"}/>
+    },
+    {
+      path: '/searchDestination',
+      element:<SearchLocation type={"destination"}/>
     }
   ]);
   return (
     <div className="App">
       {/*  */}
       <RideContextProvider>
-        <RouterProvider router={browserRouter} />
+        <MapContextProvider>
+          <RouterProvider router={browserRouter} />
+        </MapContextProvider>
       </RideContextProvider>
     </div>
   );

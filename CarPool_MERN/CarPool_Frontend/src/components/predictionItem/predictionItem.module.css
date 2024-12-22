@@ -1,0 +1,11 @@
+.predictionItem{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--background);
+    color: var(--darker);
+}
+.placeName{
+    font-size: 1rem;
+}
