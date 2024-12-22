@@ -47,9 +47,11 @@ const mapServices = {
         try {
             const response = await axios.get(URL);
             if (response.data.status == 'OK') {
+                console.log(response.data.predictions);
+                
                 const data = {
                     total: response.data.predictions.length,
-                    predictions: response.data.predictions.map((pred)=>{return{place_id: pred.place_id, description: pred.description}})
+                    predictions: response.data.predictions.map((pred)=>{return{place_id: pred.place_id,mainText: pred.structured_formatting.main_text ,description: pred.structured_formatting.secondary_text}})
                 }
                 return data;
             } else {
