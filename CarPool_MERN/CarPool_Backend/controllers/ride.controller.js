@@ -75,6 +75,15 @@ class rideController{
             next(error);
         }
     }
+    async getFilteredRides(req, res, next){
+        try {
+            const criteria = req.query;
+            const result = await rideServices.getFilteredRides(criteria);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = rideController;

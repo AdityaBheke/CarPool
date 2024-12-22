@@ -16,7 +16,11 @@ const rideServices = {
         throw new customError(404, "User not found");
       }
       // create ride using rideData
-      const ride = new Ride(rideData);
+      const formattedRideData = {
+        startTime: new Date(rideData.startTime),
+        ...rideData
+      }
+      const ride = new Ride(formattedRideData);
       if (!ride._id) {
         ride._id = new mongoose.Types.ObjectId();
       }
@@ -180,5 +184,31 @@ const rideServices = {
       );
     }
   },
+  // Filter Rides based on criteria provided by user
+  getFilteredRides: async (criteria) => {
+    try {
+      const defaultCriteria = {
+        from: "",
+        to: "",
+        reqSeats: 0,
+        journeyDate: new Date()
+      };
+      const { from, to, reqSeats, journeyDate } = {...defaultCriteria, ...criteria};
+
+      const rides = await Ride.find({
+        "startLocation.address": { $regex: new RegExp(from, 'i') },
+        "endLocation.address": { $regex: new RegExp(to, 'i') },
+        availableSeats: {$gte: Number(reqSeats)},
+        startTime: {$gte: new Date(journeyDate || new Date())},
+        status: 'active'
+      });
+      return { success: true, rides: rides };
+    } catch (error) {
+      throw new customError(
+        error.statusCode || 400,
+        error.message || "Error while getting rides"
+      );
+    }
+  }
 };
 module.exports = rideServices;
