@@ -1,24 +1,22 @@
 import styles from './searchRide.module.css';
 import { useCallback } from "react";
 import { useForm } from "../../hooks/useForm";
+import { useRideContext } from '../../context/rideContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchRide() {
 
-  const setDate = useCallback(() => {
-    const [month, day, year] = new Date().toLocaleDateString().split("/");
-    return `${year}-${month}-${day}`;
-  }, []);
+  const {searchRides, searchData, setDate} = useRideContext();
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useForm({
-    from: "",
-    to: "",
-    date: setDate(),
-    totalPassengers: 1,
-  });
+  const [formData, setFormData] = useForm(searchData);
 
   const handleSubmit = useCallback((e)=>{
     e.preventDefault();
-  },[])
+    searchRides(formData);
+    navigate('/rides')
+  },[formData, searchRides, navigate])
+
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formItem}>
@@ -47,9 +45,9 @@ export default function SearchRide() {
       <i className="fi fi-rr-calendar-day"></i>
       <input
         type="date"
-        id="date"
+        id="journeyDate"
         min={setDate()}
-        value={formData.date}
+        value={formData.journeyDate}
         onChange={setFormData}
         className={styles.formInput}
       />
@@ -58,9 +56,9 @@ export default function SearchRide() {
       <i className="fi fi-rr-user"></i>
       <input
         type="number"
-        id="totalPassengers"
+        id="reqSeats"
         placeholder="Number of passengers"
-        value={formData.totalPassengers}
+        value={formData.reqSeats}
         onChange={setFormData}
         className={styles.formInput}
       />

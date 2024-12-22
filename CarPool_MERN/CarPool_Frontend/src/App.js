@@ -6,6 +6,8 @@ import ErrorPage from './pages/errorPage/ErrorPage';
 import PublishRide from './pages/publishRide/PublishRide';
 import RideHistory from './pages/rideHistory/RideHistory';
 import Profile from './pages/profile/Profile';
+import { RideContextProvider } from './context/rideContext';
+import RidesList from './pages/ridesList/RideList';
 
 function App() {
   const browserRouter = createBrowserRouter([
@@ -43,12 +45,18 @@ function App() {
     {
       path: '/signin',
       element: <div>authpages</div>
+    },
+    {
+      path: '/rides',
+      element: <RidesList/>
     }
   ]);
   return (
     <div className="App">
       {/*  */}
-      <RouterProvider router={browserRouter} />
+      <RideContextProvider>
+        <RouterProvider router={browserRouter} />
+      </RideContextProvider>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import styles from './home.module.css';
 import backgroundImage from './../../assets/images/home-bg.png'
-import SearchRide from '../../components/form/SearchRide';
+import SearchRide from '../../components/searchRide/SearchRide';
 
 export default function Home() {
     return (

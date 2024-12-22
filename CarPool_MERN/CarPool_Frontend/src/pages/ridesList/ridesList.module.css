@@ -1,0 +1,41 @@
+.main{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+.header{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 1.2rem;
+}
+.date{
+    width: 50%;
+    padding: 0.5rem 0;
+}
+.backButton{
+    background-color: transparent;
+    color: var(--accent);
+    font-size: 1.2rem;
+    border: none;
+    padding: 0.5rem;
+    position: absolute;
+    left: 0;
+}
+.icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ridesList{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 2rem;
+}
