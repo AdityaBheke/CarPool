@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     age: Number,
+    gender: String,
     createdDate: Date,
     updatedDate: Date
   
