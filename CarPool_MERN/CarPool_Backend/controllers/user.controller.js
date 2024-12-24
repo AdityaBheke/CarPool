@@ -9,7 +9,9 @@ class userController{
             const userData = req.body;
             userData.password = await bcrypt.hash(req.body.password, 12);
             const result = await userServices.signup(userData);
-            res.status(201).json(result);
+            const user = result.user?.toObject ? result.user.toObject() : result.user;
+            delete user.password;
+            res.status(201).json({success: result.success, user});
         } catch (error) {
             next(error)
         }
@@ -19,11 +21,11 @@ class userController{
             const {email, password} = req.body;
             const result = await userServices.findByEmail(email);
             const checkPassword = await bcrypt.compare( password, result.user.password);
+            delete result.user.password;
             if (checkPassword) {
                 const token = jwt.sign({userId: result.user._id}, 'secret', { expiresIn: "30m" });
                 res.cookie("jwtToken", token);
-                res.cookie("token", token);
-                res.status(200).json(result);
+                res.status(200).json(...result, token);
             }else{
                 throw new customError(401, "Invalid Credentials")
             }

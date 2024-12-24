@@ -21,7 +21,7 @@ const userServices = {
     },
     findByEmail: async(email)=>{
         try {
-            const existingUser = await User.findOne({email:email});
+            const existingUser = await User.findOne({email:email}).select('+password').lean();
             if (existingUser) {
                 return {success: true, user: existingUser}
             }else{
