@@ -33,7 +33,7 @@ export function RideContextProvider({children}){
               setRides(data.rides);
             }
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data);
         }
     }
 
