@@ -58,3 +58,11 @@
     background-color: var(--accent);
     color: var(--light);
 }
+.switchMessage{
+    color: var(--accent);
+}
+.switchMessage a{
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--accent);
+}

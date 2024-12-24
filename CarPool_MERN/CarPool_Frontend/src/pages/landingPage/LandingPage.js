@@ -1,10 +1,18 @@
 import styles from './landingPage.module.css';
 import backgroundImage from './../../assets/images/landing_bg.jpg'
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useAuthContext } from '../../context/authContext';
 export default function LandingPage() {
     const navigate = useNavigate();
+    const {isLoggedIn} = useAuthContext();
 
+    useEffect(()=>{
+        if (isLoggedIn) {
+            navigate('/');
+        }
+    },[navigate,isLoggedIn])
+    
     const handleOnClick=useCallback((e)=>{
         const {id} = e.target;
         if (id==='signup') {

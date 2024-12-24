@@ -9,7 +9,8 @@ import Profile from './../pages/profile/Profile';
 import SearchLocation from './../pages/searchLocation/SearchLocation';
 import LandingPage from './../pages/landingPage/LandingPage';
 import { ProtectedRoute } from "./ProtectedRoute";
-import AuthPage from './../pages/authPage/AuthPage';
+import SignUp from './../pages/authPage/SignUp';
+import SignIn from './../pages/authPage/SignIn';
 
 export const browserRouter = createBrowserRouter([
     {
@@ -41,11 +42,11 @@ export const browserRouter = createBrowserRouter([
     },
     {
       path: '/signup',
-      element: <AuthPage type={'signup'}/>
+      element: <SignUp/>
     },
     {
       path: '/signin',
-      element: <AuthPage type={'signin'}/>
+      element: <SignIn/>
     },
     {
       path: '/rides',
