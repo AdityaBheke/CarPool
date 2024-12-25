@@ -199,7 +199,7 @@ const rideServices = {
         "startLocation.address": { $regex: new RegExp(from, 'i') },
         "endLocation.address": { $regex: new RegExp(to, 'i') },
         availableSeats: {$gte: Number(reqSeats)},
-        startTime: {$gte: new Date(journeyDate || new Date())},
+        startTime: {$gte: new Date(journeyDate || new Date()), $lte:new Date(journeyDate || new Date())},
         status: 'active'
       });
       return { success: true, rides: rides };
