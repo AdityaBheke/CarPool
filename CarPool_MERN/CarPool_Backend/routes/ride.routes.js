@@ -26,7 +26,7 @@ rideRouter.get('/active', (req, res, next)=>{
 rideRouter.get('/', auth, (req, res, next)=>{
     rideControllerObj.getUserRides(req, res, next);
 });
-rideRouter.get('/filter',(req, res, next)=>{
+rideRouter.get('/filter', auth,(req, res, next)=>{
     rideControllerObj.getFilteredRides(req, res, next);
 })
 
