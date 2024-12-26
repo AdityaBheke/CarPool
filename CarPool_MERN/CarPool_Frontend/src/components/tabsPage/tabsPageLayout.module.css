@@ -9,12 +9,13 @@
   .pageContent{
     height: 100%;
     flex-grow: 1;
+    overflow-y: scroll;
   }
   .tabBar{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0px -3px 13px 9px var(--background);
+    box-shadow: 0px 10px 13px 9px var(--background);
   }
   .tabBar a{
     text-decoration: none;
