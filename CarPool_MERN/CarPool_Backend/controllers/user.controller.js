@@ -25,7 +25,7 @@ class userController{
             if (checkPassword) {
                 const token = jwt.sign({userId: result.user._id}, 'secret', { expiresIn: "30m" });
                 res.cookie("jwtToken", token);
-                res.status(200).json(...result, token);
+                res.status(200).json({...result, token});
             }else{
                 throw new customError(401, "Invalid Credentials")
             }
