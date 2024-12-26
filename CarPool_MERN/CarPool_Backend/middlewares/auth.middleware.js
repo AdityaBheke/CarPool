@@ -9,8 +9,6 @@ const auth = (req, res, next)=>{
     }
     if(!token && authorization){
         token = authorization;
-        console.log(authorization);
-        
     }
 
     if (!token) {
