@@ -30,7 +30,7 @@ class rideController{
             const userId = req.userId;
             const rideId = req.params.id;
             console.log("Start rideId",rideId);
-            const result = await rideServices.updateRide(userId, rideId, {status: 'started'});
+            const result = await rideServices.updateStatus(userId, rideId, 'started');
             res.status(201).json(result);
         } catch (error) {
             next(error);
@@ -41,7 +41,7 @@ class rideController{
             const userId = req.userId;
             const rideId = req.params.id;
             console.log("Finish rideId",rideId);
-            const result = await rideServices.updateRide(userId, rideId, {status: 'completed'});
+            const result = await rideServices.updateRide(userId, rideId, 'completed');
             res.status(201).json(result);
         } catch (error) {
             next(error);
@@ -52,7 +52,7 @@ class rideController{
             const userId = req.userId;
             const rideId = req.params.id;
             console.log("Cancel rideId",rideId);
-            const result = await rideServices.updateRide(userId, rideId, {status: 'cancelled'});
+            const result = await rideServices.updateRide(userId, rideId, 'cancelled');
             res.status(201).json(result);
         } catch (error) {
             next(error);

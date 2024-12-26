@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {customError} = require('../middlewares/errorhandler.middleware')
 const userServices = require('./user.services')
+const mapServices = require('./map.service');
 const rideSchema = require('../models/ride.model');
 
 
@@ -8,27 +9,72 @@ const Ride = mongoose.model('Ride',rideSchema);
 const rideServices = {
   // Publish a ride
   // get userID and Ride data from user
-  publishRide: async (userId, rideData) => {
+  publishRide: async function (userId, rideData) {
     try {
       // CHeck is user is present or not using userId
       const isValidUser = await userServices.findByUserId(userId);
       if (!isValidUser) {
         throw new customError(404, "User not found");
       }
-      // create ride using rideData
+      
+      const {
+        origin,
+        originId,
+        destination,
+        destinationId,
+        journeyDate,
+        startTime,
+        totalSeats,
+        farePerPerson,
+        vehicleName,
+        vehicleColor,
+        vehiclePlate,
+      } = rideData;
+
+      const direction = await mapServices.getDirectionsByPlaceId(originId, destinationId);
+      const {start, end} = this.getTimeRange(journeyDate,startTime, direction.duration.value);
+
       const formattedRideData = {
-        startTime: new Date(rideData.startTime),
-        ...rideData
+          driverId: userId,
+          startLocation: {
+              address: origin,
+              fullAddress: direction.start_address,
+              coordinates: {
+                  lat: direction.start_location.lat,
+                  lng: direction.start_location.lng
+              }
+          },
+          endLocation: {
+              address: destination,
+              fullAddress: direction.end_address,
+              coordinates: {
+                  lat: direction.end_location.lat,
+                  lng: direction.end_location.lng
+              }
+          },
+          route: [ direction.start_location, ...direction.steps.map((step)=>step.end_location)],
+          distance: direction.distance.value,
+          startTime: start,
+          endTime: end,
+          farePerPerson: farePerPerson,
+          totalSeats: totalSeats,
+          bookedSeats: 0,
+          availableSeats:totalSeats,
+          status:"active",
+          vehicleDetails:{
+              vehicleName: vehicleName,
+              vehicleColor: vehicleColor,
+              vehiclePlate: vehiclePlate
+          },
+          createdDate: new Date(),
+          updatedDate: new Date()
       }
+
+      // create ride using rideData
       const ride = new Ride(formattedRideData);
       if (!ride._id) {
         ride._id = new mongoose.Types.ObjectId();
       }
-      ride.createdDate = new Date();
-      ride.updatedDate = new Date();
-      ride.status = "active";
-      ride.driverId = userId;
-      ride.availableSeats = ride.totalSeats;
       const createdRide = await ride.save();
       // Return created ride data
       return { success: true, ride: createdRide };
@@ -41,7 +87,7 @@ const rideServices = {
   },
   // Update ride details
   // get userId, rideId and Update data
-  updateRide: async (userId, rideId, updateData) => {
+  updateRide: async function(userId, rideId, updateData) {
     try {
       // check if user is present or not using userId
       const isValidUser = await userServices.findByUserId(userId);
@@ -49,7 +95,7 @@ const rideServices = {
         throw new customError(404, "User not found");
       }
       //  Check if ride is present or not using rideId
-      const isValidRide = await Ride.findById(rideId);
+      let isValidRide = await Ride.findById(rideId);
       if (!isValidRide) {
         throw new customError(404, "Ride not found");
       }
@@ -57,12 +103,105 @@ const rideServices = {
       if (isValidRide.driverId != userId) {
         throw new customError(403, "Only publisher can update ride details");
       }
-      updateData.updatedDate = new Date();
+
+      // CHANGE UPDATE APPROACH
+      // Destructure Update Data
+      const {
+        origin,
+        originId,
+        destination,
+        destinationId,
+        journeyDate,
+        startTime,
+        totalSeats,
+        farePerPerson,
+        vehicleName,
+        vehicleColor,
+        vehiclePlate,
+      } = updateData;
+
+      const newDate = this.getTimeRange(journeyDate, startTime, 0).start;
+      if (origin != isValidRide.startLocation.address || 
+        destination != isValidRide.endLocation.address ||
+        newDate.getTime() != isValidRide.startTime.getTime()
+      ) {
+        // Make google api call
+        // update time range
+        const direction = await mapServices.getDirectionsByPlaceId(originId, destinationId);
+        const {start, end} = this.getTimeRange(journeyDate,startTime, direction.duration.value);
+        isValidRide = {
+          ...isValidRide,
+          startLocation: {
+            address: origin,
+            fullAddress: direction.start_address,
+            coordinates: {
+              lat: direction.start_location.lat,
+              lng: direction.start_location.lng,
+            },
+          },
+          endLocation: {
+            address: destination,
+            fullAddress: direction.end_address,
+            coordinates: {
+              lat: direction.end_location.lat,
+              lng: direction.end_location.lng,
+            },
+          },
+          route: [
+            direction.start_location,
+            ...direction.steps.map((step) => step.end_location),
+          ],
+          distance: direction.distance.value,
+          startTime: start,
+          endTime: end,
+        };
+      }
+
+      isValidRide = {
+        ...isValidRide,
+        totalSeats,
+        farePerPerson,
+        vehicleDetails: {
+          vehicleName,
+          vehicleColor,
+          vehiclePlate,
+        },
+        updatedDate: new Date()
+      };
+
       // update ride details using Update data
-      await Ride.findByIdAndUpdate(rideId, updateData);
+      await Ride.findByIdAndUpdate(rideId, isValidRide.toObject(), { new: true, runValidators: true });
       // Return updated ride details
-      const updatedRide = Object.assign(isValidRide, updateData);
-      return { success: true, ride: updatedRide };
+      // const updatedRide = Object.assign(isValidRide, updateData);
+      return { success: true, ride: isValidRide };
+    } catch (error) {
+      throw new customError(
+        error.statusCode || 400,
+        error.message || "Error while updating a ride"
+      );
+    }
+  },
+  // Update status
+  updateStatus: async(userId, rideId, status)=>{
+    try {
+      // check if user is present or not using userId
+      const isValidUser = await userServices.findByUserId(userId);
+      if (!isValidUser) {
+        throw new customError(404, "User not found");
+      }
+      //  Check if ride is present or not using rideId
+      let isValidRide = await Ride.findById(rideId);
+      if (!isValidRide) {
+        throw new customError(404, "Ride not found");
+      }
+      //  Check for only authorized user is changing ride details
+      if (isValidRide.driverId != userId) {
+        throw new customError(403, "Only publisher can update ride details");
+      }
+      isValidRide.status = status;
+      await isValidRide.save();
+      return {success: true, ride: isValidRide}
+
     } catch (error) {
       throw new customError(
         error.statusCode || 400,
@@ -191,15 +330,24 @@ const rideServices = {
         from: "",
         to: "",
         reqSeats: 0,
-        journeyDate: new Date()
+        journeyDate: ""
       };
       const { from, to, reqSeats, journeyDate } = {...defaultCriteria, ...criteria};
+
+      let startTimeQuery = {$gte: new Date()};
+      if (journeyDate) {
+        const startOfDay = new Date(journeyDate);
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(journeyDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        startTimeQuery = { $gte: startOfDay, $lte: endOfDay };
+      }
 
       const rides = await Ride.find({
         "startLocation.address": { $regex: new RegExp(from, 'i') },
         "endLocation.address": { $regex: new RegExp(to, 'i') },
         availableSeats: {$gte: Number(reqSeats)},
-        startTime: {$gte: new Date(journeyDate || new Date()), $lte:new Date(journeyDate || new Date())},
+        startTime: {startTimeQuery},
         status: 'active'
       });
       return { success: true, rides: rides };
@@ -209,6 +357,13 @@ const rideServices = {
         error.message || "Error while getting rides"
       );
     }
+  },
+  getTimeRange: function (date, startTime, secondsToAdd){
+    const [year, month, day] = date.split('-').map((d)=>Number(d));
+    const [hour, minute] = startTime.split(':').map((d)=>Number(d));
+    const start = new Date(year, month-1, day, hour, minute, 0);
+    const end = new Date(start.getTime() + (secondsToAdd*1000));
+    return {start, end}
   }
 };
 module.exports = rideServices;

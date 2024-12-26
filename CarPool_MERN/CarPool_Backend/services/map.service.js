@@ -109,6 +109,25 @@ const mapServices = {
         } catch (error) {
             throw new customError(error.statusCode||400, error.message || "Unable to get directions")
         }
+    },
+    getDirectionsByPlaceId: async (originId, destinationId)=>{
+        // check if origin and destination are not empty
+        if (!originId || !destinationId) {
+            throw new customError(400, "Origin and Destination cannot be empty");
+        }
+        // customize url 
+        const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+        const URL = `https://maps.googleapis.com/maps/api/directions/json?origin=place_id:${originId}&destination=place_id:${destinationId}&region=in&key=${API_KEY}`;
+        try {
+            const response = await axios.get(URL);
+            if (response.data.status=='OK') {
+                return response.data.routes[0]?.legs[0];
+            } else {
+                throw new customError(404, "Directions not found");
+            }
+        } catch (error) {
+            throw new customError(error.statusCode||400, error.message || "Unable to get directions")
+        }
     }
 }
 module.exports = mapServices;

@@ -11,24 +11,27 @@ const rideSchema = new mongoose.Schema({
     },
     startLocation: {
         address: String,
+        fullAddress: String,
         coordinates: {
             lat: Number,
-            long: Number
+            lng: Number
         }
     },
     endLocation: {
         address: String,
+        fullAddress: String,
         coordinates: {
             lat: Number,
-            long: Number
+            lng: Number
         }
     },
     route:[
         {
             lat: Number,
-            long: Number
+            lng: Number
         }
     ],
+    distance: Number,
     startTime: Date,
     endTime: Date,
     farePerPerson: {
