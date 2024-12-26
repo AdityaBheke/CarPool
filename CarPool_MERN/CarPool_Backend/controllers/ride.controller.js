@@ -75,6 +75,15 @@ class rideController{
             next(error);
         }
     }
+    async getRideById(req, res, next){
+        try {
+            const rideId = req.params.id;
+            const result = await rideServices.getRideById(rideId);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
     async getFilteredRides(req, res, next){
         try {
             const criteria = req.query;

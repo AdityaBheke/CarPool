@@ -288,7 +288,10 @@ const rideServices = {
   // Get particular ride by rideId
   getRideById: async (rideId) => {
     try {
-      const ride = await Ride.findById(rideId);
+      const ride = await Ride.findById(rideId)
+      .populate('driverId', 'name mobile gender')
+      .populate('passengers.primaryPassenger', 'name mobile gender');
+      
       return { success: true, ride: ride };
     } catch (error) {
       throw new customError(
