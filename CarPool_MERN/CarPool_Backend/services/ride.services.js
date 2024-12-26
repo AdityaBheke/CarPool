@@ -301,7 +301,7 @@ const rideServices = {
 //   get userId from user
   getRidesByUserId: async (userId)=>{
     try {
-        const rides = await Ride.find({$or:[{driverId: userId },{passengers:{$elemMatch:{primaryPassenger:userId}}}]});
+        const rides = await Ride.find({$or:[{driverId: userId },{passengers:{$elemMatch:{primaryPassenger:userId}}}]}).populate('driverId',"name mobile gender");
         return {success: true, rides: rides}
     } catch (error) {
         throw new customError(
@@ -347,9 +347,8 @@ const rideServices = {
         "startLocation.address": { $regex: new RegExp(from, 'i') },
         "endLocation.address": { $regex: new RegExp(to, 'i') },
         availableSeats: {$gte: Number(reqSeats)},
-        startTime: startTimeQuery,
-        status: 'active'
-      });
+        startTime: startTimeQuery
+      }).populate('driverId',"name mobile gender");
       return { success: true, rides: rides };
     } catch (error) {
       throw new customError(
