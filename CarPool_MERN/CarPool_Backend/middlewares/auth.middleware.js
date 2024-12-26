@@ -2,12 +2,17 @@ const jwt = require('jsonwebtoken');
 const { customError } = require('./errorhandler.middleware');
 
 const auth = (req, res, next)=>{
-    const {cookie} = req.headers;
-    if (!cookie) {
-        throw new customError(400, 'Bad request Token not available');
+    const {cookie, authorization} = req.headers;
+    let token;
+    if (cookie) {
+        token = cookie?.split('; ')?.filter((c)=> c.includes('jwtToken'))?.[0]?.replace('jwtToken=','');
     }
-    
-    const token = cookie?.split('; ')?.filter((c)=> c.includes('jwtToken'))?.[0]?.replace('jwtToken=','');
+    if(!token && authorization){
+        token = authorization;
+        console.log(authorization);
+        
+    }
+
     if (!token) {
         throw new customError(400, 'Bad request Token not available')
     }
