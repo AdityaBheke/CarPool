@@ -1,21 +1,20 @@
 import styles from './searchRide.module.css';
 import { useCallback } from "react";
-import { useForm } from "../../hooks/useForm";
 import { useRideContext } from '../../context/rideContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchRide() {
 
-  const {searchRides, searchData, setDate} = useRideContext();
+  const {searchRides, searchData, setSearchData, setDate} = useRideContext();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useForm(searchData);
+  // const [searchData, handleOnChange] = useForm(searchData);
 
   const handleSubmit = useCallback((e)=>{
     e.preventDefault();
-    searchRides(formData);
+    searchRides(searchData);
     navigate('/rides')
-  },[formData, searchRides, navigate])
+  },[searchData, searchRides, navigate])
 
   const searchLocation = useCallback((e)=>{
     if (e.target.id==='from') {
@@ -24,6 +23,11 @@ export default function SearchRide() {
       navigate('/searchDestination');
     }
   },[navigate])
+
+  const handleOnChange = useCallback((e)=>{
+    const {id, value} = e.target;
+    setSearchData({...searchData, [id]:value})
+  },[searchData, setSearchData])
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formItem}>
@@ -32,8 +36,8 @@ export default function SearchRide() {
         type="text"
         id="from"
         placeholder="Leaving from"
-        value={formData.from}
-        onChange={setFormData}
+        value={searchData.from}
+        onChange={handleOnChange}
         onClick={searchLocation}
         className={styles.formInput}
       />
@@ -44,8 +48,8 @@ export default function SearchRide() {
         type="text"
         id="to"
         placeholder="Going to"
-        value={formData.to}
-        onChange={setFormData}
+        value={searchData.to}
+        onChange={handleOnChange}
         onClick={searchLocation}
         className={styles.formInput}
       />
@@ -56,8 +60,8 @@ export default function SearchRide() {
         type="date"
         id="journeyDate"
         min={setDate()}
-        value={formData.journeyDate}
-        onChange={setFormData}
+        value={searchData.journeyDate}
+        onChange={handleOnChange}
         className={styles.formInput}
       />
       </div>
@@ -67,8 +71,8 @@ export default function SearchRide() {
         type="number"
         id="reqSeats"
         placeholder="Number of passengers"
-        value={formData.reqSeats}
-        onChange={setFormData}
+        value={searchData.reqSeats}
+        onChange={handleOnChange}
         className={styles.formInput}
       />
       </div>
