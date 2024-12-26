@@ -1,0 +1,66 @@
+.main{
+    height: 100%;
+    width: 100%;
+}
+.form{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+.formHeader{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+.itemContainer{
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid var(--background);
+    border-radius: 0.5rem;
+}
+.formItem{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--background);
+    color: var(--accent);
+}
+.formInput{
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    background-color: var(--white);
+    font-size: 1rem;
+    color: var(--accent);
+}
+.buttonContainer{
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 2rem;
+}
+.button{
+    flex-grow: 1;
+    padding: 1rem;
+    background-color: var(--light);
+    color: var(--accent);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.submitButton{
+    background-color: var(--accent);
+    color: var(--light);
+}

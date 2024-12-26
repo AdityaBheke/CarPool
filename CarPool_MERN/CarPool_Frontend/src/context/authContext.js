@@ -8,6 +8,7 @@ export const useAuthContext = ()=>{
 }
 
 export function AuthContextProvider({children}){
+  const [token, setToken] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -44,6 +45,8 @@ export function AuthContextProvider({children}){
           
           if (data.success) {
             setIsLoggedIn(true);
+            setToken(data.token);
+            // PENDING: Store necessary user data in local storage
             return true;
           } else {
             return false;
@@ -59,6 +62,7 @@ export function AuthContextProvider({children}){
           isLoggedIn,
           signUpUser,
           signInUser,
+          token
         }}
       >
         {children}

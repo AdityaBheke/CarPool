@@ -26,8 +26,41 @@
     font-size: 2rem;
     padding: 0.2rem 1rem;
 }
+
+.footer{
+    display: flex;
+    justify-content: space-between;
+}
 .driverInfo{
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+.status{
+    text-transform: capitalize;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    width: 100px;
+}
+.active{
+    color: var(--accent);
+    background-color: var(--light);
+}
+.started{
+    color: #d17100;
+    background-color: #ffe5c7;
+}
+.completed{
+    color: green;
+    background-color: #b4ffb4;
+}
+.cancelled{
+    color: #ff0000;
+    background-color: #ffd6d6;
 }

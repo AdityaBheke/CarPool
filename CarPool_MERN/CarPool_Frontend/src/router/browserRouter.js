@@ -3,7 +3,6 @@ import TabsPageLayout from './../components/tabsPage/TabsPageLayout';
 import ErrorPage from './../pages/errorPage/ErrorPage';
 import Home from './../pages/home/Home';
 import PublishRide from './../pages/publishRide/PublishRide';
-import RideHistory from './../pages/rideHistory/RideHistory';
 import RidesList from './../pages/ridesList/RideList';
 import Profile from './../pages/profile/Profile';
 import SearchLocation from './../pages/searchLocation/SearchLocation';
@@ -28,7 +27,7 @@ export const browserRouter = createBrowserRouter([
         },
         {
           path:"/myrides",
-          element: <RideHistory />,
+          element: <RidesList type={'history'} />,
         },
         {
           path:"/profile",
@@ -50,14 +49,22 @@ export const browserRouter = createBrowserRouter([
     },
     {
       path: '/rides',
-      element: <RidesList/>
+      element: <RidesList type={'result'}/>
     },
     {
       path: '/searchOrigin',
-      element:<SearchLocation type={"origin"}/>
+      element:<SearchLocation type={"searchOrigin"}/>
     },
     {
       path: '/searchDestination',
-      element:<SearchLocation type={"destination"}/>
+      element:<SearchLocation type={"searchDestination"}/>
+    },
+    {
+      path: '/publishOrigin',
+      element:<SearchLocation type={"publishOrigin"}/>
+    },
+    {
+      path: '/publishDestination',
+      element:<SearchLocation type={"publishDestination"}/>
     }
   ]);

@@ -4,15 +4,21 @@ import { useRideContext } from '../../context/rideContext';
 import { useMapContext } from '../../context/mapsContext';
 export default function PredictionItem({prediction, type}){
     const {clear} = useMapContext();
-    const {searchData, setSearchData} = useRideContext();
+    const {searchData, setSearchData,publishData, setPublishData} = useRideContext();
     const navigate = useNavigate();
     const handleOnClick = (e)=>{
-        if (type==='origin') {
+        if (type==='searchOrigin') {
             setSearchData({...searchData, from: prediction.mainText})
-            navigate("/")
-        } else if(type==='destination'){
+            navigate(-1)
+        } else if(type==='searchDestination'){
             setSearchData({...searchData, to: prediction.mainText})
-            navigate("/")
+            navigate(-1)
+        }else if (type==='publishOrigin') {
+            setPublishData({...publishData, origin:prediction.mainText, originId: prediction.place_id})
+            navigate(-1)
+        }else if (type==='publishDestination') {
+            setPublishData({...publishData, destination:prediction.mainText, destinationId: prediction.place_id})
+            navigate(-1)
         }else{
             return
         }
