@@ -61,16 +61,12 @@ export function RideContextProvider({children}){
     // Publish ride
     const publishRide = async (rideData)=>{
         try {
-            console.log(rideData);
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            const response = await axios.post(`${backendUrl}/ride`, rideData,{
+            await axios.post(`${backendUrl}/ride`, rideData,{
                 headers:{
                     Authorization: token
                 }
             });
-            const data = response.data;
-            console.log(data);
-            
         } catch (error) {
             console.log(error.response?.data || error.message || error);
         }
@@ -118,7 +114,7 @@ export function RideContextProvider({children}){
             const data = response.data;
             data.ride.passengers.push({allPassengers:[{name:"Hulk", age:24, gender:'male'},{name:"Wanda", age:20, gender:'female'},{name:"Thor", age:24, gender:'male'}]})
             // data.ride.passengers.push({allPassengers:[{name:"Black widow", age:25, gender:'female'},{name:"Black Panther", age:29, gender:'male'}]})
-            console.log(data);
+            // console.log(data);
             if (data.success) {
                 setRideDetails(data.ride);
             }
@@ -141,9 +137,7 @@ export function RideContextProvider({children}){
           );
           const data = response.data;
           if (data.success) {
-            console.log(data.ride);
             setRideDetails(data.ride)
-            return true;
           }
         } catch (error) {
           console.log(error.response?.data || error.message || error);

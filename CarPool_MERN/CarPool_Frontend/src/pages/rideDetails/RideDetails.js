@@ -5,8 +5,6 @@ import { useRideContext } from '../../context/rideContext';
 import { useAuthContext } from '../../context/authContext';
 export default function RideDetails(){
     const {user} = useAuthContext();
-    console.log(user);
-    
     const {rideId} = useParams();
     const {fetchRideDetails, rideDetails, changeRideStatus} = useRideContext();
     const navigate = useNavigate();
