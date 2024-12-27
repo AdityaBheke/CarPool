@@ -289,8 +289,7 @@ const rideServices = {
   getRideById: async (rideId) => {
     try {
       const ride = await Ride.findById(rideId)
-      .populate('driverId', 'name mobile gender')
-      .populate('passengers.primaryPassenger', 'name mobile gender');
+      .populate('driverId', 'name mobile gender age');
       
       return { success: true, ride: ride };
     } catch (error) {
