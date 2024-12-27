@@ -10,6 +10,7 @@ import LandingPage from './../pages/landingPage/LandingPage';
 import { ProtectedRoute } from "./ProtectedRoute";
 import SignUp from './../pages/authPage/SignUp';
 import SignIn from './../pages/authPage/SignIn';
+import RideDetails from "../pages/rideDetails/RideDetails";
 
 export const browserRouter = createBrowserRouter([
     {
@@ -66,5 +67,8 @@ export const browserRouter = createBrowserRouter([
     {
       path: '/publishDestination',
       element:<SearchLocation type={"publishDestination"}/>
+    },{
+      path: "/rideDetails/:rideId",
+      element: <RideDetails/>
     }
   ]);

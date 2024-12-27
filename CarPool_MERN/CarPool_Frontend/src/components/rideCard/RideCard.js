@@ -3,7 +3,7 @@ import styles from './rideCard.module.css'
 export default function RideCard({ride}){
     const navigate = useNavigate();
     const handleOnClick = (e)=>{
-        navigate('/rideDetails');
+        navigate(`/rideDetails/${ride._id}`);
     }
     return (
       // Ride Card

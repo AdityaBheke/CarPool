@@ -1,0 +1,137 @@
+import { useNavigate, useParams } from 'react-router-dom';
+import styles from './rideDetails.module.css';
+import { useCallback, useEffect } from 'react';
+import { useRideContext } from '../../context/rideContext';
+export default function RideDetails(){
+    const {rideId} = useParams();
+    const {fetchRideDetails, rideDetails} = useRideContext();
+    const navigate = useNavigate();
+    useEffect(()=>{
+        fetchRideDetails(rideId);
+    },[fetchRideDetails, rideId]);
+
+    const goBack = useCallback(()=>{
+            navigate(-1);
+        },[navigate])
+    
+    return (
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <button onClick={goBack} className={styles.backButton}>
+            <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>
+          </button>
+          <div className={styles.pageHead}>Ride Details</div>
+        </div>
+        <div className={styles.rideInfo}>
+          <div className={styles.containerHead}>Route</div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>From:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.startLocation?.fullAddress ||
+                rideDetails?.startLocation?.address}
+              {rideDetails?.startLocation?.fullAddress ||
+                rideDetails?.startLocation?.address}
+              {rideDetails?.startLocation?.fullAddress ||
+                rideDetails?.startLocation?.address}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>To:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.endLocation?.fullAddress ||
+                rideDetails?.endLocation?.address}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Distance:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.distance / 1000} KM
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Start Time:</div>
+            <div className={styles.infoValue}>{rideDetails?.startTime}</div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Approx End Time:</div>
+            <div className={styles.infoValue}>{rideDetails?.endTime}</div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Total Seats:</div>
+            <div className={styles.infoValue}>{rideDetails?.totalSeats}</div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Available seats:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.availableSeats}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Status</div>
+            <div
+              className={`${styles.infoValue} ${styles.status} ${
+                styles[rideDetails?.status]
+              }`}
+            >
+              {rideDetails?.status}
+            </div>
+          </div>
+        </div>
+        <div className={styles.rideInfo}>
+          <div className={styles.containerHead}>Vehicle</div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Model Name:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.vehicleDetails?.vehicleName}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Color:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.vehicleDetails?.vehicleColor}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Number plate:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.vehicleDetails?.vehiclePlate}
+            </div>
+          </div>
+        </div>
+        <div className={styles.rideInfo}>
+          <div className={styles.containerHead}>Owner</div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Name:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.driverId?.name}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Gender:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.driverId?.gender}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Mobile:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.driverId?.mobile}
+            </div>
+          </div>
+        </div>
+        <div className={styles.rideInfo}>
+          <div className={styles.containerHead}>Passenger Info</div>
+          <div className={styles.passengerContainer}>
+            {rideDetails?.passengers?.length>0 ? rideDetails?.passengers?.map((booking)=>booking.allPassengers?.map((passenger, index) => (
+              <div key={index} className={styles.passengerItem}>
+                <div className={styles.passengerName}>{passenger.name}</div>
+                <div className={styles.passengerGender}>{passenger.gender}</div>
+                <div className={styles.passengerAge}>{passenger.age}</div>
+              </div>
+            ))):"No Passengers Found"}
+          </div>
+        </div>
+        <div className={styles.rideActions}></div>
+      </div>
+    );
+}

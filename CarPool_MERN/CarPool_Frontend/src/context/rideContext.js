@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { useAuthContext } from "./authContext";
 
 const rideContext = createContext();
@@ -10,9 +10,10 @@ export const useRideContext = ()=>{
 }
 
 export function RideContextProvider({children}){
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    // const backendUrls = process.env.REACT_APP_BACKEND_URL;
     const {token} = useAuthContext();
     const [rides, setRides] = useState([]);
+    const [rideDetails, setRideDetails] = useState(null);
     const [searchData, setSearchData] = useState({
         from: "",
         to: "",
@@ -42,6 +43,7 @@ export function RideContextProvider({children}){
     // Search and fetch Rides from backend
     const searchRides = async (criteria)=>{
         try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/ride/filter`, {
                 params: criteria,
                 headers: {
@@ -60,6 +62,7 @@ export function RideContextProvider({children}){
     const publishRide = async (rideData)=>{
         try {
             console.log(rideData);
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.post(`${backendUrl}/ride`, rideData,{
                 headers:{
                     Authorization: token
@@ -87,8 +90,9 @@ export function RideContextProvider({children}){
         });
     }
 
-    const fetchRideHistory= async()=>{
+    const fetchRideHistory= useCallback(async()=>{
         try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/ride`,{
                 headers:{
                     Authorization: token
@@ -101,7 +105,27 @@ export function RideContextProvider({children}){
         } catch (error) {
             console.log(error.response?.data || error.message || error);
         }
-    }
+    },[token])
+
+    const fetchRideDetails = useCallback(async (rideId)=>{
+        try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/ride/${rideId}`,{
+                headers:{
+                    Authorization: token
+                }
+            });
+            const data = response.data;
+            data.ride.passengers.push({allPassengers:[{name:"Hulk", age:24, gender:'male'},{name:"Wanda", age:20, gender:'female'},{name:"Thor", age:24, gender:'male'}]})
+            // data.ride.passengers.push({allPassengers:[{name:"Black widow", age:25, gender:'female'},{name:"Black Panther", age:29, gender:'male'}]})
+            console.log(data);
+            if (data.success) {
+                setRideDetails(data.ride);
+            }
+        } catch (error) {
+            console.log(error.response?.data || error.message || error);
+        }
+    },[token])
 
     return (
       <rideContext.Provider
@@ -116,7 +140,9 @@ export function RideContextProvider({children}){
           setPublishData,
           resetPublishData,
           fetchRideHistory,
-          setRides
+          setRides,
+          fetchRideDetails,
+          rideDetails
         }}
       >
         {children}

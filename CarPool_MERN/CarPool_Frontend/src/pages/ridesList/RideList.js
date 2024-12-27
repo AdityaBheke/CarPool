@@ -11,7 +11,7 @@ export default function RidesList({type}) {
 
     useEffect(()=>{
       if (type==='history') {
-        fetchRideHistory();
+        fetchRideHistory()
       }
     },[fetchRideHistory, type]);
 
