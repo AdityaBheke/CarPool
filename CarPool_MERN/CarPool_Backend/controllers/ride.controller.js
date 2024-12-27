@@ -25,39 +25,20 @@ class rideController{
             next(error);
         }
     }
-    async startRide(req, res, next){
+    async updateRideStatus(req, res, next){
         try {
             const userId = req.userId;
             const rideId = req.params.id;
-            console.log("Start rideId",rideId);
-            const result = await rideServices.updateStatus(userId, rideId, 'started');
+            const {status} = req.body;
+            console.log("rideId",rideId);
+            console.log("status",status);
+            const result = await rideServices.updateStatus(userId, rideId, status);
             res.status(201).json(result);
         } catch (error) {
             next(error);
         }
     }
-    async finishRide(req, res, next){
-        try {
-            const userId = req.userId;
-            const rideId = req.params.id;
-            console.log("Finish rideId",rideId);
-            const result = await rideServices.updateRide(userId, rideId, 'completed');
-            res.status(201).json(result);
-        } catch (error) {
-            next(error);
-        }
-    }
-    async cancelRide(req, res, next){
-        try {
-            const userId = req.userId;
-            const rideId = req.params.id;
-            console.log("Cancel rideId",rideId);
-            const result = await rideServices.updateRide(userId, rideId, 'cancelled');
-            res.status(201).json(result);
-        } catch (error) {
-            next(error);
-        }
-    }
+
     async getActiveRides(req, res, next){
         try {
             const result = await rideServices.getActiveRides();

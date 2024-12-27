@@ -190,12 +190,12 @@ const rideServices = {
         throw new customError(404, "User not found");
       }
       //  Check if ride is present or not using rideId
-      let isValidRide = await Ride.findById(rideId);
+      let isValidRide = await Ride.findById(rideId).populate('driverId',"name mobile age gender");
       if (!isValidRide) {
         throw new customError(404, "Ride not found");
       }
       //  Check for only authorized user is changing ride details
-      if (isValidRide.driverId != userId) {
+      if (isValidRide.driverId._id != userId) {
         throw new customError(403, "Only publisher can update ride details");
       }
       isValidRide.status = status;
