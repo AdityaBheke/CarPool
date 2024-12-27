@@ -39,6 +39,7 @@ const rideServices = {
           startLocation: {
               address: origin,
               fullAddress: direction.start_address,
+              place_id: originId,
               coordinates: {
                   lat: direction.start_location.lat,
                   lng: direction.start_location.lng
@@ -47,6 +48,7 @@ const rideServices = {
           endLocation: {
               address: destination,
               fullAddress: direction.end_address,
+              place_id: destinationId,
               coordinates: {
                   lat: direction.end_location.lat,
                   lng: direction.end_location.lng
@@ -120,20 +122,22 @@ const rideServices = {
         vehiclePlate,
       } = updateData;
 
+      let rideData = isValidRide.toObject();
       const newDate = this.getTimeRange(journeyDate, startTime, 0).start;
-      if (origin != isValidRide.startLocation.address || 
-        destination != isValidRide.endLocation.address ||
-        newDate.getTime() != isValidRide.startTime.getTime()
+      if (origin != rideData.startLocation.address || 
+        destination != rideData.endLocation.address ||
+        newDate.getTime() != rideData.startTime.getTime()
       ) {
         // Make google api call
         // update time range
         const direction = await mapServices.getDirectionsByPlaceId(originId, destinationId);
         const {start, end} = this.getTimeRange(journeyDate,startTime, direction.duration.value);
-        isValidRide = {
-          ...isValidRide,
+        rideData = {
+          ...rideData,
           startLocation: {
             address: origin,
             fullAddress: direction.start_address,
+            place_id: originId,
             coordinates: {
               lat: direction.start_location.lat,
               lng: direction.start_location.lng,
@@ -142,6 +146,7 @@ const rideServices = {
           endLocation: {
             address: destination,
             fullAddress: direction.end_address,
+            place_id: destinationId,
             coordinates: {
               lat: direction.end_location.lat,
               lng: direction.end_location.lng,
@@ -157,8 +162,8 @@ const rideServices = {
         };
       }
 
-      isValidRide = {
-        ...isValidRide,
+      rideData = {
+        ...rideData,
         totalSeats,
         farePerPerson,
         vehicleDetails: {
@@ -170,10 +175,10 @@ const rideServices = {
       };
 
       // update ride details using Update data
-      await Ride.findByIdAndUpdate(rideId, isValidRide.toObject(), { new: true, runValidators: true });
+      await Ride.findByIdAndUpdate(rideId, rideData);
       // Return updated ride details
-      // const updatedRide = Object.assign(isValidRide, updateData);
-      return { success: true, ride: isValidRide };
+      // const updatedRide = Object.assign(rideData, updateData);
+      return { success: true, ride: rideData };
     } catch (error) {
       throw new customError(
         error.statusCode || 400,
@@ -303,7 +308,7 @@ const rideServices = {
 //   get userId from user
   getRidesByUserId: async (userId)=>{
     try {
-        const rides = await Ride.find({$or:[{driverId: userId },{passengers:{$elemMatch:{primaryPassenger:userId}}}]}).populate('driverId',"name mobile gender");
+        const rides = await Ride.find({$or:[{driverId: userId },{passengers:{$elemMatch:{primaryPassenger:userId}}}]}).sort({ createdDate: -1 }).populate('driverId',"name mobile gender");
         return {success: true, rides: rides}
     } catch (error) {
         throw new customError(

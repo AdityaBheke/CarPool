@@ -17,7 +17,6 @@ class rideController{
         try {
             const userId = req.userId;
             const rideId = req.params.id;
-            console.log("Update rideId",rideId);
             const updateData = req.body;
             const result = await rideServices.updateRide(userId, rideId, updateData);
             res.status(201).json(result);
@@ -30,8 +29,6 @@ class rideController{
             const userId = req.userId;
             const rideId = req.params.id;
             const {status} = req.body;
-            console.log("rideId",rideId);
-            console.log("status",status);
             const result = await rideServices.updateStatus(userId, rideId, status);
             res.status(201).json(result);
         } catch (error) {

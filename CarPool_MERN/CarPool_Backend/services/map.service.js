@@ -113,7 +113,7 @@ const mapServices = {
     getDirectionsByPlaceId: async (originId, destinationId)=>{
         // check if origin and destination are not empty
         if (!originId || !destinationId) {
-            throw new customError(400, "Origin and Destination cannot be empty");
+            throw new customError(400, "OriginID and DestinationID cannot be empty");
         }
         // customize url 
         const API_KEY = process.env.GOOGLE_MAPS_API_KEY;

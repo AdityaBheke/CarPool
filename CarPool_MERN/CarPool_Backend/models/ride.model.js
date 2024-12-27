@@ -12,6 +12,7 @@ const rideSchema = new mongoose.Schema({
     startLocation: {
         address: String,
         fullAddress: String,
+        place_id: String,
         coordinates: {
             lat: Number,
             lng: Number
@@ -20,6 +21,7 @@ const rideSchema = new mongoose.Schema({
     endLocation: {
         address: String,
         fullAddress: String,
+        place_id: String,
         coordinates: {
             lat: Number,
             lng: Number
