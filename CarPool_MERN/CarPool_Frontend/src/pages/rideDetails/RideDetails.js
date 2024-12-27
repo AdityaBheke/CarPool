@@ -6,7 +6,7 @@ import { useAuthContext } from '../../context/authContext';
 export default function RideDetails(){
     const {user} = useAuthContext();
     const {rideId} = useParams();
-    const {fetchRideDetails, rideDetails, changeRideStatus} = useRideContext();
+    const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData} = useRideContext();
     const navigate = useNavigate();
     useEffect(()=>{
         fetchRideDetails(rideId);
@@ -20,8 +20,9 @@ export default function RideDetails(){
         // navigate to book ride page
     },[])
     const handleUpdateRide = useCallback(()=>{
-        // navigate to update page
-    },[])
+        setUpdateData();
+        navigate("/updateRide")
+    },[navigate,setUpdateData])
     const handleStartRide = useCallback(()=>{
         // call startRide function
         changeRideStatus(rideId, "started")
@@ -34,6 +35,8 @@ export default function RideDetails(){
         // call finishRide function
         changeRideStatus(rideId, "completed")
     },[changeRideStatus,rideId])
+
+    
 
     return (
       <>
@@ -50,15 +53,13 @@ export default function RideDetails(){
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>From:</div>
               <div className={styles.infoValue}>
-                {rideDetails?.startLocation?.fullAddress ||
-                  rideDetails?.startLocation?.address}
+                {rideDetails?.startLocation?.address}
               </div>
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>To:</div>
               <div className={styles.infoValue}>
-                {rideDetails?.endLocation?.fullAddress ||
-                  rideDetails?.endLocation?.address}
+                {rideDetails?.endLocation?.address}
               </div>
             </div>
             <div className={styles.infoItem}>
@@ -69,11 +70,11 @@ export default function RideDetails(){
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>Start Time:</div>
-              <div className={styles.infoValue}>{rideDetails?.startTime}</div>
+              <div className={styles.infoValue}>{getTimeFromDate(rideDetails?.startTime)}</div>
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>Approx End Time:</div>
-              <div className={styles.infoValue}>{rideDetails?.endTime}</div>
+              <div className={styles.infoValue}>{getTimeFromDate(rideDetails?.endTime)}</div>
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>Total Seats:</div>
@@ -83,6 +84,12 @@ export default function RideDetails(){
               <div className={styles.infoHead}>Available seats:</div>
               <div className={styles.infoValue}>
                 {rideDetails?.availableSeats}
+              </div>
+            </div>
+            <div className={styles.infoItem}>
+              <div className={styles.infoHead}>Fare:</div>
+              <div className={styles.infoValue}>
+              &#8377;{rideDetails?.farePerPerson}
               </div>
             </div>
             <div className={styles.infoItem}>

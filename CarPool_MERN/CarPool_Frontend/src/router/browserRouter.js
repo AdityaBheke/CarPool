@@ -24,7 +24,7 @@ export const browserRouter = createBrowserRouter([
         },
         {
           path:"/publish",
-          element: <PublishRide />,
+          element: <PublishRide type={"publish"} />,
         },
         {
           path:"/myrides",
@@ -70,5 +70,9 @@ export const browserRouter = createBrowserRouter([
     },{
       path: "/rideDetails/:rideId",
       element: <RideDetails/>
+    },
+    {
+      path: "/updateRide",
+      element: <PublishRide type={"update"}/>
     }
   ]);

@@ -58,21 +58,8 @@ export function RideContextProvider({children}){
             console.log(error.response?.data || error.message || error);
         }
     }
-    // Publish ride
-    const publishRide = async (rideData)=>{
-        try {
-            const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            await axios.post(`${backendUrl}/ride`, rideData,{
-                headers:{
-                    Authorization: token
-                }
-            });
-        } catch (error) {
-            console.log(error.response?.data || error.message || error);
-        }
-    }
 
-    const resetPublishData = ()=>{
+    const resetPublishData = useCallback(()=>{
         setPublishData({
             origin:"",
             destination:"",
@@ -84,6 +71,58 @@ export function RideContextProvider({children}){
             vehicleColor:"",
             vehiclePlate:""
         });
+    },[])
+    // Publish ride
+    const publishRide = async (rideData)=>{
+        try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            await axios.post(`${backendUrl}/ride`, rideData,{
+                headers:{
+                    Authorization: token
+                }
+            });
+            resetPublishData();
+        } catch (error) {
+            console.log(error.response?.data || error.message || error);
+        }
+    }
+
+    const getTimeFromDate = useCallback((dateString)=>{
+        const date = new Date(dateString);
+        const hh = date.getHours();
+        const mm = date.getMinutes();
+        return (hh<10?"0"+hh:hh) + ":" + (mm<10?"0"+mm:mm);
+    },[])
+
+    const setUpdateData = useCallback(async ()=>{
+        setPublishData({
+          origin: rideDetails.startLocation.address,
+          originId: rideDetails.startLocation.place_id,
+          destination: rideDetails.endLocation.address,
+          destinationId: rideDetails.endLocation.place_id,
+          journeyDate: rideDetails.startTime.split('T')[0],
+          startTime: getTimeFromDate(rideDetails.startTime),
+          totalSeats: rideDetails.totalSeats,
+          farePerPerson: rideDetails.farePerPerson,
+          vehicleName: rideDetails.vehicleDetails.vehicleName,
+          vehicleColor: rideDetails.vehicleDetails.vehicleColor,
+          vehiclePlate: rideDetails.vehicleDetails.vehiclePlate,
+          rideId: rideDetails._id
+        });
+    },[getTimeFromDate, rideDetails])
+
+    const updateRide = async(updateData)=>{
+        try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            await axios.put(`${backendUrl}/ride/${updateData.rideId}`, updateData,{
+                headers:{
+                    Authorization:token
+                }
+            })
+            resetPublishData();
+        } catch (error) {
+            console.log(error.response?.data || error.message || error);
+        }
     }
 
     const fetchRideHistory= useCallback(async()=>{
@@ -160,7 +199,10 @@ export function RideContextProvider({children}){
           setRides,
           fetchRideDetails,
           rideDetails, 
-          changeRideStatus
+          changeRideStatus,
+          getTimeFromDate,
+          setUpdateData,
+          updateRide
         }}
       >
         {children}

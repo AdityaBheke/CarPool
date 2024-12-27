@@ -3,22 +3,30 @@ import { useCallback } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import styles from './publishRide.module.css';
 import { useNavigate } from 'react-router-dom';
-export default function PublishRide() {
-    const {setDate, publishData, setPublishData, publishRide, resetPublishData} = useRideContext();
+export default function PublishRide({type}) {
+    const {setDate, publishData, setPublishData, publishRide, resetPublishData, updateRide} = useRideContext();
     const navigate = useNavigate();
 
     const handleOnSubmit=useCallback(async(e)=>{
         e.preventDefault();
-        await publishRide(publishData);
-        navigate('/myrides')
-    },[publishRide, publishData, navigate])
+        if (type==='update') {
+            await updateRide(publishData);
+            navigate(-1)
+        } else if(type==='publish'){
+            await publishRide(publishData);
+            navigate('/myrides')
+        }
+    },[publishRide, publishData, navigate, type, updateRide])
+
     const handleOnReset = useCallback((e)=>{
         resetPublishData();
     },[resetPublishData])
+
     const handleOnChange = useCallback((e)=>{
         const {id, value} = e.target;
         setPublishData({...publishData, [id]:value});
     },[publishData, setPublishData])
+
     const searchLocation = useCallback((e)=>{
         if (e.target.id==='origin') {
           navigate('/publishOrigin');
@@ -27,7 +35,17 @@ export default function PublishRide() {
         }
       },[navigate])
 
+    const goBack = useCallback(()=>{
+        resetPublishData()
+        navigate(-1);
+    },[navigate, resetPublishData])
+
     return <div className={styles.main}>
+        {type==='update' && <div className={styles.header}>
+        <button onClick={goBack} className={styles.backButton}>
+              <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>
+        </button>
+        </div>}
     <form onSubmit={handleOnSubmit} onReset={handleOnReset} className={styles.form}>
         <div className={styles.itemContainer}>
             <div className={styles.formHeader}>
@@ -78,7 +96,7 @@ export default function PublishRide() {
         
         <div className={styles.buttonContainer}>
             <button type='reset' className={styles.button}>Reset</button>
-            <button type='submit' className={`${styles.button} ${styles.submitButton}`}>Publish</button>
+            <button type='submit' className={`${styles.button} ${styles.submitButton}`}>{type}</button>
         </div>
     </form>
 </div>
