@@ -127,6 +127,29 @@ export function RideContextProvider({children}){
         }
     },[token])
 
+    const changeRideStatus = useCallback(async (rideId, status)=>{
+        try {
+          const backendUrl = process.env.REACT_APP_BACKEND_URL;
+          const response = await axios.put(
+            `${backendUrl}/ride/updateStatus/${rideId}`,
+            { status },
+            {
+              headers: {
+                Authorization: token
+              }
+            }
+          );
+          const data = response.data;
+          if (data.success) {
+            console.log(data.ride);
+            setRideDetails(data.ride)
+            return true;
+          }
+        } catch (error) {
+          console.log(error.response?.data || error.message || error);
+        }
+    },[token])
+
     return (
       <rideContext.Provider
         value={{
@@ -142,7 +165,8 @@ export function RideContextProvider({children}){
           fetchRideHistory,
           setRides,
           fetchRideDetails,
-          rideDetails
+          rideDetails, 
+          changeRideStatus
         }}
       >
         {children}
