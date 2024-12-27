@@ -10,7 +10,8 @@ export default function AuthPage() {
             email: "",
             password: "",
             mobile: "",
-            gender:'default'
+            gender:'default',
+            age:0
           });
     const navigate = useNavigate();
 
@@ -43,8 +44,12 @@ export default function AuthPage() {
                 <input type='password' id='password' placeholder='Create password' value={signUpData.password} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
-                <label htmlFor='mbile' className={styles.formLabel}>Mobile</label>
+                <label htmlFor='mobile' className={styles.formLabel}>Mobile</label>
                 <input type='tel' id='mobile' placeholder='Enter mobile' value={signUpData.mobile} onChange={setSignUpData} className={styles.formInput}/>
+            </div>
+            <div className={styles.formItem}>
+                <label htmlFor='age' className={styles.formLabel}>Age</label>
+                <input type='number' id='age' placeholder='Enter age' value={signUpData.age} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='gender' className={styles.formLabel}>Gender</label>

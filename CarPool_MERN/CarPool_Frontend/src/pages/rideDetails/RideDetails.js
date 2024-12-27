@@ -22,15 +22,12 @@ export default function RideDetails(){
           </button>
           <div className={styles.pageHead}>Ride Details</div>
         </div>
+        {/* Route Info */}
         <div className={styles.rideInfo}>
           <div className={styles.containerHead}>Route</div>
           <div className={styles.infoItem}>
             <div className={styles.infoHead}>From:</div>
             <div className={styles.infoValue}>
-              {rideDetails?.startLocation?.fullAddress ||
-                rideDetails?.startLocation?.address}
-              {rideDetails?.startLocation?.fullAddress ||
-                rideDetails?.startLocation?.address}
               {rideDetails?.startLocation?.fullAddress ||
                 rideDetails?.startLocation?.address}
             </div>
@@ -77,6 +74,7 @@ export default function RideDetails(){
             </div>
           </div>
         </div>
+        {/* Vehicle Info */}
         <div className={styles.rideInfo}>
           <div className={styles.containerHead}>Vehicle</div>
           <div className={styles.infoItem}>
@@ -98,6 +96,7 @@ export default function RideDetails(){
             </div>
           </div>
         </div>
+        {/* Owner Info */}
         <div className={styles.rideInfo}>
           <div className={styles.containerHead}>Owner</div>
           <div className={styles.infoItem}>
@@ -107,18 +106,25 @@ export default function RideDetails(){
             </div>
           </div>
           <div className={styles.infoItem}>
+            <div className={styles.infoHead}>Mobile:</div>
+            <div className={styles.infoValue}>
+              {rideDetails?.driverId?.mobile}
+            </div>
+          </div>
+          <div className={styles.infoItem}>
             <div className={styles.infoHead}>Gender:</div>
             <div className={styles.infoValue}>
               {rideDetails?.driverId?.gender}
             </div>
           </div>
           <div className={styles.infoItem}>
-            <div className={styles.infoHead}>Mobile:</div>
+            <div className={styles.infoHead}>Age:</div>
             <div className={styles.infoValue}>
-              {rideDetails?.driverId?.mobile}
+              {rideDetails?.driverId?.age}
             </div>
           </div>
         </div>
+        {/* Passenger Info */}
         <div className={styles.rideInfo}>
           <div className={styles.containerHead}>Passenger Info</div>
           <div className={styles.passengerContainer}>
@@ -131,7 +137,9 @@ export default function RideDetails(){
             ))):"No Passengers Found"}
           </div>
         </div>
-        <div className={styles.rideActions}></div>
+        <div className={styles.rideActions}>
+
+        </div>
       </div>
     );
 }
