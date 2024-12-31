@@ -69,12 +69,12 @@ export default function RideDetails(){
               </div>
             </div>
             <div className={styles.infoItem}>
-              <div className={styles.infoHead}>Start Time:</div>
-              <div className={styles.infoValue}>{getTimeFromDate(rideDetails?.startTime)}</div>
+              <div className={styles.infoHead}>Journey date:</div>
+              <div className={styles.infoValue}>{rideDetails?.startTime.split('T')[0]}</div>
             </div>
             <div className={styles.infoItem}>
-              <div className={styles.infoHead}>Approx End Time:</div>
-              <div className={styles.infoValue}>{getTimeFromDate(rideDetails?.endTime)}</div>
+              <div className={styles.infoHead}>Start Time:</div>
+              <div className={styles.infoValue}>{getTimeFromDate(rideDetails?.startTime)}</div>
             </div>
             <div className={styles.infoItem}>
               <div className={styles.infoHead}>Total Seats:</div>
