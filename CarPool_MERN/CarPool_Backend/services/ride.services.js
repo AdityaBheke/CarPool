@@ -216,7 +216,7 @@ const rideServices = {
   },
   // Update Passenger Details
   // Get userId(Primary passengerId), Ride id, Passengers Array to update
-  updatePassengers: async (userId, rideId, passengerArray) => {
+  updatePassengers: async (userId, rideId, bookingId, passengerArray) => {
     try {
       // Check if user is present or not using userId
       const isValidUser = await userServices.findByUserId(userId);
@@ -228,24 +228,32 @@ const rideServices = {
       if (!isValidRide) {
         throw new customError(404, "Ride not found");
       }
-    //   Check if required seats are available or not
-    if (passengerArray.length>isValidRide.availableSeats) {
-        throw new customError(400, "Required number of seats are not available");
-    }
+    
     //   check if user is present in passsengers
     const passengerIndex = isValidRide.passengers.findIndex((passenger)=>passenger.primaryPassenger==userId);
     if (passengerIndex>=0) {
-        // If present then update passenger array
-        isValidRide.passengers[passengerIndex].allPassengers = passengerArray;
+      if (passengerArray.length-isValidRide.passengers[passengerIndex].allPassengers.length<=isValidRide.availableSeats) {
+          // If present then update passenger array
+          const seatsToReduce = passengerArray.length - isValidRide.passengers[passengerIndex].allPassengers.length;
+          isValidRide.availableSeats = isValidRide.availableSeats - seatsToReduce;
+          isValidRide.passengers[passengerIndex].allPassengers = passengerArray;
+      }else{
+        throw new customError(400, "Required number of seats are not available");
+      }
     } else {
-        // If not present then push new Passenger 
+      //   Check if required seats are available or not
+        if (passengerArray.length>isValidRide.availableSeats) {
+            throw new customError(400, "Required number of seats are not available");
+        }
+        // push new Passenger 
         isValidRide.passengers.unshift({
+            bookingId: bookingId,
             primaryPassenger: userId,
             allPassengers: passengerArray
         })
+        // update available seats
+      isValidRide.availableSeats -= passengerArray.length
     }
-    // update available seats
-    isValidRide.availableSeats -= passengerArray.length
     // Update the ride
       await Ride.updateOne({ _id: rideId }, isValidRide);
       return { success: true, ride: isValidRide };

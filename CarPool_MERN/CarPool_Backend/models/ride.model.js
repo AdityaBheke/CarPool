@@ -58,6 +58,10 @@ const rideSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
             },
+            bookingId:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Booking'
+            },
             allPassengers: [
                 {
                     name: String,

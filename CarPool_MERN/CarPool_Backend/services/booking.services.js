@@ -34,7 +34,7 @@ const bookingServices = {
             booking.passengerId = userId;
             booking.status = 'confirmed';
             // update Ride with passenger info
-            await rideServices.updatePassengers(userId, bookingData.rideId, booking.allPassengers);
+            await rideServices.updatePassengers(userId, bookingData.rideId, booking._id, booking.allPassengers);
             // Save booking to database
             const createdBooking = await booking.save();
             // return created booking
@@ -64,7 +64,7 @@ const bookingServices = {
             const updatedBooking = Object.assign(booking, updateData);
             await Booking.updateOne({_id: bookingId}, updatedBooking);
             // update Ride with passenger info
-            await rideServices.updatePassengers(userId, updatedBooking.rideId, updatedBooking.allPassengers);
+            await rideServices.updatePassengers(userId, updatedBooking.rideId, bookingId, updatedBooking.allPassengers);
             // return updated booking
             return {success: true, booking: updatedBooking};
         } catch (error) {
