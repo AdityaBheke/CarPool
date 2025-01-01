@@ -11,6 +11,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import SignUp from './../pages/authPage/SignUp';
 import SignIn from './../pages/authPage/SignIn';
 import RideDetails from "../pages/rideDetails/RideDetails";
+import Booking from "../pages/bookingPage/Booking";
 
 export const browserRouter = createBrowserRouter([
     {
@@ -74,5 +75,13 @@ export const browserRouter = createBrowserRouter([
     {
       path: "/updateRide",
       element: <PublishRide type={"update"}/>
+    },
+    {
+      path:'/bookRide',
+      element: <Booking type={'book'} />
+    },
+    {
+      path:'/updateBooking',
+      element: <Booking type={'update'} />
     }
   ]);

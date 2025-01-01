@@ -3,6 +3,7 @@ import './App.css';
 import { RideContextProvider } from './context/rideContext';
 import { MapContextProvider } from './context/mapsContext';
 import { browserRouter } from './router/browserRouter';
+import {BookingContextProvider} from './context/bookingContext';
 
 function App() {
   
@@ -10,9 +11,11 @@ function App() {
     <div className="App">
       {/*  */}
       <RideContextProvider>
-        <MapContextProvider>
-          <RouterProvider router={browserRouter} />
-        </MapContextProvider>
+        <BookingContextProvider>
+          <MapContextProvider>
+            <RouterProvider router={browserRouter} />
+          </MapContextProvider>
+        </BookingContextProvider>
       </RideContextProvider>
     </div>
   );

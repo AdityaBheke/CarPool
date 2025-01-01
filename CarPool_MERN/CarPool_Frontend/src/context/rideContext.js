@@ -14,6 +14,12 @@ export function RideContextProvider({children}){
     const {token} = useAuthContext();
     const [rides, setRides] = useState([]);
     const [rideDetails, setRideDetails] = useState(null);
+    // Set default date
+    const setDate = useCallback(()=>{
+        const [month, day, year] = new Date().toLocaleDateString().split("/");
+        return `${year}-${month<10?"0"+month:month}-${day<10?"0"+day:day}`;
+    },[])
+
     const [searchData, setSearchData] = useState({
         from: "",
         to: "",
@@ -34,12 +40,6 @@ export function RideContextProvider({children}){
         vehiclePlate:""
     })
 
-
-    // Set default date
-    function setDate(){
-        const [month, day, year] = new Date().toLocaleDateString().split("/");
-        return `${year}-${month}-${day}`;
-    }
     // Search and fetch Rides from backend
     const searchRides = async (criteria)=>{
         try {
@@ -71,7 +71,7 @@ export function RideContextProvider({children}){
             vehicleColor:"",
             vehiclePlate:""
         });
-    },[])
+    },[setDate])
     // Publish ride
     const publishRide = async (rideData)=>{
         try {
@@ -151,9 +151,9 @@ export function RideContextProvider({children}){
                 }
             });
             const data = response.data;
-            data.ride.passengers.push({allPassengers:[{name:"Hulk", age:24, gender:'male'},{name:"Wanda", age:20, gender:'female'},{name:"Thor", age:24, gender:'male'}]})
+            // data.ride.passengers.push({allPassengers:[{name:"Hulk", age:24, gender:'male'},{name:"Wanda", age:20, gender:'female'},{name:"Thor", age:24, gender:'male'}]})
             // data.ride.passengers.push({allPassengers:[{name:"Black widow", age:25, gender:'female'},{name:"Black Panther", age:29, gender:'male'}]})
-            // console.log(data);
+            console.log(data);
             if (data.success) {
                 setRideDetails(data.ride);
             }

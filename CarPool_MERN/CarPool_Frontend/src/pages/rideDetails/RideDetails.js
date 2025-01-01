@@ -18,6 +18,14 @@ export default function RideDetails(){
     
     const handleBookRide = useCallback(()=>{
         // navigate to book ride page
+        navigate('/bookRide')
+    },[navigate])
+    const handleUpdateBooking = useCallback(()=>{
+      // navigate to update booking page
+      navigate('/updateBooking')
+    },[navigate])
+    const handleCancelBooking = useCallback(()=>{
+
     },[])
     const handleUpdateRide = useCallback(()=>{
         setUpdateData();
@@ -181,12 +189,18 @@ export default function RideDetails(){
           {rideDetails?.status === "active" ? (
             user._id === rideDetails?.driverId._id ? (
               <>
-                <button onClick={handleCancelRide} className={`${styles.button} ${styles.cancelButton}`}>Cancel</button>
+                <button onClick={handleCancelRide} className={`${styles.button} ${styles.cancelButton}`}>Cancel Ride</button>
                 <button onClick={handleUpdateRide} className={`${styles.button} ${styles.updateButton}`}>Update</button>
                 <button onClick={handleStartRide} className={styles.button}>Start</button>
               </>
             ) : (
-              <><button onClick={handleBookRide} className={styles.button}>Book Ride</button></>
+              rideDetails?.passengers?.find((booking)=>booking.primaryPassenger===user._id) ?(
+              <>
+                <button onClick={handleCancelBooking} className={`${styles.button} ${styles.cancelButton}`}>Cancel Booking</button>
+                <button onClick={handleUpdateBooking} className={styles.button}>Update Ride</button>
+              </> ):(
+                <><button onClick={handleBookRide} className={styles.button}>Book Ride</button></>
+              )
             )
           ) : rideDetails?.status === "started" ? (
             user._id === rideDetails?.driverId._id ? (
