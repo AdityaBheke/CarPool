@@ -36,7 +36,7 @@ export default function Booking({type}) {
             const booking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
             if (booking) {
                 await updateBooking(rideDetails._id, booking.bookingId)
-                // navigate(-1)
+                navigate(-1)
             }
         } else if(type==='book'){
             await bookRide(rideDetails._id)

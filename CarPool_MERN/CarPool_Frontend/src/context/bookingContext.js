@@ -69,6 +69,21 @@ export function BookingContextProvider({children}){
         console.log(error.response?.data || error.message || error);
       }
     },[allPassengers, token])
+
+    const cancelBooking = useCallback(async (rideId, bookingId)=>{
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await axios.put(`${backendUrl}/booking/cancel/${bookingId}`,{},{
+          headers:{
+            Authorization: token
+          }
+        })
+        console.log("Cancel Resoponse", response.data);
+      } catch (error) {
+        console.log(error.response?.data || error.message || error);
+      }
+    },[token])
+
     return (
       <bookingContext.Provider
         value={{
@@ -78,7 +93,8 @@ export function BookingContextProvider({children}){
           handleAddPassenger,
           handleRemovePassenger,
           bookRide,
-          updateBooking
+          updateBooking,
+          cancelBooking
         }}
       >
         {children}

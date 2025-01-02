@@ -3,10 +3,12 @@ import styles from './rideDetails.module.css';
 import { useCallback, useEffect } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import { useAuthContext } from '../../context/authContext';
+import { useBookingContext } from '../../context/bookingContext';
 export default function RideDetails(){
     const {user} = useAuthContext();
     const {rideId} = useParams();
     const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData} = useRideContext();
+    const {cancelBooking} = useBookingContext();
     const navigate = useNavigate();
     useEffect(()=>{
         fetchRideDetails(rideId);
@@ -24,9 +26,13 @@ export default function RideDetails(){
       // navigate to update booking page
       navigate('/updateBooking')
     },[navigate])
-    const handleCancelBooking = useCallback(()=>{
-
-    },[])
+    const handleCancelBooking = useCallback(async(e)=>{
+        const booking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
+            if (booking) {
+                await cancelBooking(rideDetails._id, booking.bookingId)
+                navigate(-1);
+            }
+    },[navigate,cancelBooking, rideDetails, user])
     const handleUpdateRide = useCallback(()=>{
         setUpdateData();
         navigate("/updateRide")
