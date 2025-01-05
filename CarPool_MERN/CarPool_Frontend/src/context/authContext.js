@@ -58,6 +58,12 @@ export function AuthContextProvider({children}){
           return false;
         }      
     }
+
+    const logoutUser = ()=>{
+      setIsLoggedIn(false);
+      setToken('')
+      setUser(null)
+    }
     return (
       <authContext.Provider
         value={{
@@ -65,7 +71,8 @@ export function AuthContextProvider({children}){
           signUpUser,
           signInUser,
           token,
-          user
+          user,
+          logoutUser
         }}
       >
         {children}

@@ -33,7 +33,7 @@ export const browserRouter = createBrowserRouter([
         },
         {
           path:"/profile",
-          element: <Profile />,
+          element:<ProtectedRoute> <Profile /></ProtectedRoute>,
         },
       ],
     },
