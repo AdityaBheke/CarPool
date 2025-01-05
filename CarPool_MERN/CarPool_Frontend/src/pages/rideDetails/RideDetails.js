@@ -203,7 +203,7 @@ export default function RideDetails(){
               rideDetails?.passengers?.find((booking)=>booking.primaryPassenger===user._id) ?(
               <>
                 <button onClick={handleCancelBooking} className={`${styles.button} ${styles.cancelButton}`}>Cancel Booking</button>
-                <button onClick={handleUpdateBooking} className={styles.button}>Update Ride</button>
+                <button onClick={handleUpdateBooking} className={styles.button}>Update Booking</button>
               </> ):(
                 <><button onClick={handleBookRide} className={styles.button}>Book Ride</button></>
               )

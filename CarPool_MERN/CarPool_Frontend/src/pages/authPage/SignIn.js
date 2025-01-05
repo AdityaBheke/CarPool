@@ -29,11 +29,11 @@ export default function AuthPage() {
         <form onSubmit={handleOnSubmit} className={styles.form}>
             <div className={styles.formItem}>
                 <label htmlFor='email' className={styles.formLabel}>Email</label>
-                <input type='email' id='email' placeholder='Enter email' value={signInData.email} onChange={setSignInData} className={styles.formInput}/>
+                <input type='email' id='email' required placeholder='Enter email' value={signInData.email} onChange={setSignInData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='password' className={styles.formLabel}>Password</label>
-                <input type='password' id='password' placeholder='Create password' value={signInData.password} onChange={setSignInData} className={styles.formInput}/>
+                <input type='password' id='password' required placeholder='Enter password' value={signInData.password} onChange={setSignInData} className={styles.formInput}/>
             </div>
             <div className={styles.buttonContainer}>
                 <button type='submit' className={`${styles.button} ${styles.submitButton}`}>Sign in</button>

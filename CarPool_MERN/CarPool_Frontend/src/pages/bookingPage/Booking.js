@@ -22,8 +22,6 @@ export default function Booking({type}) {
     // console.log("All passengers def", typeof allPassengers, allPassengers);
 
     useEffect(()=>{
-        console.log(rideDetails);
-        
         const prevBooking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
         console.log("Prev Booking ",prevBooking);
         setAllPassengers(prevBooking?[...prevBooking.allPassengers]:[{name:"", gender:"", age: 0}]);
@@ -148,17 +146,21 @@ export default function Booking({type}) {
                 </div>
                 <div className={styles.formItem}>
                   <i className="fi fi-rr-venus-mars"></i>
-                  <input
-                    type="text"
+                  <select
                     id="gender"
-                    placeholder="Gender"
-                    value={passenger.gender}
                     required
+                    defaultValue={passenger.gender}
                     onChange={(e) => {
                       handleOnChangePassenger(e, index);
                     }}
                     className={styles.formInput}
-                  />
+                  >
+                    <option value={""} disabled>
+                      Select gender
+                    </option>
+                    <option value={"male"}>Male</option>
+                    <option value={"female"}>Female</option>
+                  </select>
                 </div>
                 <div className={styles.formItem}>
                   <i className="fi fi-rr-age"></i>
@@ -176,11 +178,15 @@ export default function Booking({type}) {
                 </div>
               </div>
             ))}
-            {
-              availableSlots!==0 && <button type="button" onClick={addPassengers} className={styles.button}>
+            {availableSlots !== 0 && (
+              <button
+                type="button"
+                onClick={addPassengers}
+                className={styles.button}
+              >
                 Add more passenger
               </button>
-            }
+            )}
           </div>
 
           <div className={styles.buttonContainer}>
@@ -195,7 +201,7 @@ export default function Booking({type}) {
               type="submit"
               className={`${styles.button} ${styles.submitButton}`}
             >
-              {type} Ride
+              {type}
             </button>
           </div>
         </form>

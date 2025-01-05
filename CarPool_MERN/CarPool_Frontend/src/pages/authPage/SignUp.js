@@ -10,7 +10,7 @@ export default function AuthPage() {
             email: "",
             password: "",
             mobile: "",
-            gender:'default',
+            gender:'',
             age:0
           });
     const navigate = useNavigate();
@@ -33,28 +33,28 @@ export default function AuthPage() {
         <form onSubmit={handleOnSubmit} className={styles.form}>
             <div className={styles.formItem}>
                 <label htmlFor='name' className={styles.formLabel}>Name</label>
-                <input type='text' id='name' placeholder='Enter name' value={signUpData.name} onChange={setSignUpData} className={styles.formInput}/>
+                <input type='text' id='name' required placeholder='Enter name' value={signUpData.name} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='email' className={styles.formLabel}>Email</label>
-                <input type='email' id='email' placeholder='Enter email' value={signUpData.email} onChange={setSignUpData} className={styles.formInput}/>
+                <input type='email' id='email' required placeholder='Enter email' value={signUpData.email} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='password' className={styles.formLabel}>Password</label>
-                <input type='password' id='password' placeholder='Create password' value={signUpData.password} onChange={setSignUpData} className={styles.formInput}/>
+                <input type='password' id='password' required placeholder='Create password' value={signUpData.password} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='mobile' className={styles.formLabel}>Mobile</label>
-                <input type='tel' id='mobile' placeholder='Enter mobile' value={signUpData.mobile} onChange={setSignUpData} className={styles.formInput}/>
+                <input type='tel' id='mobile' required placeholder='Enter mobile' value={signUpData.mobile} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='age' className={styles.formLabel}>Age</label>
-                <input type='number' id='age' placeholder='Enter age' value={signUpData.age} onChange={setSignUpData} className={styles.formInput}/>
+                <input type='number' id='age' required placeholder='Enter age' value={signUpData.age} onChange={setSignUpData} className={styles.formInput}/>
             </div>
             <div className={styles.formItem}>
                 <label htmlFor='gender' className={styles.formLabel}>Gender</label>
-                <select id='gender' defaultValue={signUpData.gender} onChange={setSignUpData} className={styles.formInput}>
-                    <option value={'default'} disabled>Select gender</option>
+                <select id='gender' defaultValue={signUpData.gender} required onChange={setSignUpData} className={styles.formInput}>
+                    <option value={''} disabled>Select gender</option>
                     <option value={'male'}>Male</option>
                     <option value={'female'}>Female</option>
                 </select>
