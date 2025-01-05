@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 const authContext = createContext();
 export const useAuthContext = ()=>{
@@ -13,9 +13,15 @@ export function AuthContextProvider({children}){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
-    // const getLoggedInUser = ()=>{
-
-    // }
+    const getLoggedInUser = useCallback(()=>{
+      const prevUser = localStorage.getItem('user');
+      const prevToken = localStorage.getItem('token');
+      if (prevUser && prevToken) {
+        setUser(JSON.parse(prevUser));
+        setToken(prevToken)
+        setIsLoggedIn(true);
+      }
+    },[])
     const signUpUser = async(userDetails)=>{
         console.log("User Data",userDetails);
         try {
@@ -49,6 +55,8 @@ export function AuthContextProvider({children}){
             setToken(data.token);
             setUser(data.user)
             // PENDING: Store necessary user data in local storage
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', data.token);
             return true;
           } else {
             return false;
@@ -61,8 +69,10 @@ export function AuthContextProvider({children}){
 
     const logoutUser = ()=>{
       setIsLoggedIn(false);
-      setToken('')
-      setUser(null)
+      setToken('');
+      setUser(null);
+      localStorage.setItem('user', "");
+      localStorage.setItem('token', "");
     }
     return (
       <authContext.Provider
@@ -72,7 +82,8 @@ export function AuthContextProvider({children}){
           signInUser,
           token,
           user,
-          logoutUser
+          logoutUser,
+          getLoggedInUser
         }}
       >
         {children}
