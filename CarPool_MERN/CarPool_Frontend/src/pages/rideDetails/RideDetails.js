@@ -53,9 +53,9 @@ export default function RideDetails(){
     const handleOpenMap = useCallback(()=>{
       navigate('/map');
     },[navigate])
-    
+
     const handleSOS = useCallback(()=>{
-      if (user.emergencyContacts.length>0) {
+      if (user?.emergencyContacts?.length>0) {
         // Send SOS function
         sendSOS(rideId);
       }else{

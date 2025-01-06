@@ -18,7 +18,7 @@ export default function AddEmergencyContacts(){
       setEmergencyContacts([...emergencyContacts, {friendlyName:"", email:"", contact:""}])
     },[emergencyContacts, setEmergencyContacts])
     useEffect(()=>{
-      setEmergencyContacts(user?.emergencyContacts?[...user?.emergencyContacts]:[{friendlyName:"", email:"", contact:""}])
+      setEmergencyContacts(user?.emergencyContacts?.length>0?[...user?.emergencyContacts]:[{friendlyName:"", email:"", contact:""}])
     },[user, setEmergencyContacts])
     return (
       <div className={styles.main}>
