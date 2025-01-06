@@ -3,6 +3,7 @@ const {customError} = require('../middlewares/errorhandler.middleware')
 const userServices = require('./user.services')
 const mapServices = require('./map.service');
 const rideSchema = require('../models/ride.model');
+const {sendEmail} = require('./../utils/email/emergencyEmail');
 
 
 const Ride = mongoose.model('Ride',rideSchema);
@@ -378,6 +379,29 @@ const rideServices = {
     const start = new Date(year, month-1, day, hour, minute, 0);
     const end = new Date(start.getTime() + (secondsToAdd*1000));
     return {start, end}
-  }
+  },
+  alertEmergencyContacts: async(userId, rideId, lat, lng)=>{
+    try {
+        const user = (await userServices.findByUserId(userId)).user;
+        if(!user){
+            throw new customError(404, "User not found");
+        }
+        const ride = await Ride.findById(rideId).populate("driverId");
+        if (!ride) {
+          throw new customError(404, "Ride not found");
+        }
+        const smsContent = `\nSOS: Passenger ${user.name}\nRide: ${ride.startLocation.address} to ${ride.endLocation.address}\nDriver: ${ride.driverId.name} (${ride.driverId.mobile}) \nLoc: ${lat}, ${lng}`.trim();
+        const emailContent = `\nSOS: Passenger ${user.name}\nRide: ${ride.startLocation.address} to ${ride.endLocation.address}\nDriver: ${ride.driverId.name} (${ride.driverId.mobile}) \nLoc: ${lat}, ${lng}`.trim();
+
+        const emailReceivers = user.emergencyContacts.map((contacts)=>contacts.email).join(',');
+        await sendEmail(emailReceivers, "SOS: Immediate Assistance Required!", emailContent);
+
+        return {success: true, message : "Location sent"};
+    } catch (error) {
+        console.log(error);
+        
+        throw new customError(error.statusCode || 400, error.message || 'Error while sending alert message');
+    }
+}
 };
 module.exports = rideServices;

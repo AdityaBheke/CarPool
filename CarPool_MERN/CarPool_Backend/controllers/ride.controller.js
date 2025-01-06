@@ -71,6 +71,16 @@ class rideController{
             next(error)
         }
     }
+    async sendLocation(req, res, next){
+        try {
+            const userId = req.userId;
+            const {rideId, lat, lng} = req.query;
+            const result = await rideServices.alertEmergencyContacts(userId, rideId, lat, lng);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = rideController;

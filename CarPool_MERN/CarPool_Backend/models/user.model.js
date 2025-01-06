@@ -23,6 +23,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    emergencyContacts:[
+        {
+            friendlyName: String,
+            email: String,
+            contact: Number
+        }
+    ],
     age: Number,
     gender: String,
     createdDate: Date,

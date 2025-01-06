@@ -23,6 +23,9 @@ rideRouter.get('/', auth, (req, res, next)=>{
 rideRouter.get('/filter', auth,(req, res, next)=>{
     rideControllerObj.getFilteredRides(req, res, next);
 });
+rideRouter.get('/emergency',auth, (req, res, next)=>{
+    rideControllerObj.sendLocation(req, res, next);
+})
 rideRouter.get('/:id', (req, res, next)=>{
     rideControllerObj.getRideById(req, res, next);
 });
