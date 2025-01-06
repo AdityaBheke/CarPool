@@ -7,7 +7,7 @@ import { useBookingContext } from '../../context/bookingContext';
 export default function RideDetails(){
     const {user} = useAuthContext();
     const {rideId} = useParams();
-    const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData} = useRideContext();
+    const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData, sendSOS} = useRideContext();
     const {cancelBooking} = useBookingContext();
     const navigate = useNavigate();
     useEffect(()=>{
@@ -50,6 +50,18 @@ export default function RideDetails(){
         changeRideStatus(rideId, "completed")
     },[changeRideStatus,rideId])
 
+    const handleOpenMap = useCallback(()=>{
+      navigate('/map');
+    },[navigate])
+    
+    const handleSOS = useCallback(()=>{
+      if (user.emergencyContacts.length>0) {
+        // Send SOS function
+        sendSOS(rideId);
+      }else{
+        navigate('/addEmergency')
+      }
+    },[navigate, user, sendSOS, rideId])
     
 
     return (
@@ -210,9 +222,17 @@ export default function RideDetails(){
             )
           ) : rideDetails?.status === "started" ? (
             user._id === rideDetails?.driverId._id ? (
-              <><button onClick={handleFinishRide} className={styles.button}>Finish Ride</button></>
+              <>
+                <button onClick={handleOpenMap} className={`${styles.button} ${styles.updateButton}`}>Open Map</button>
+                <button onClick={handleFinishRide} className={styles.button}>Finish Ride</button>
+              </>
             ) : (
-              <div className={styles.statusMessage}>{rideDetails?.status}</div>
+              rideDetails?.passengers?.find((booking)=>booking.primaryPassenger===user._id)?(<>
+                <button onClick={handleOpenMap} className={`${styles.button} ${styles.updateButton}`}>Open Map</button>
+                <button onClick={handleSOS} className={`${styles.button} ${styles.cancelButton}`}>SOS</button>
+              </>):(
+                <div className={styles.statusMessage}>{rideDetails?.status}</div>
+              )
             )
           ) : (
             <div className={styles.statusMessage}>{rideDetails?.status}</div>

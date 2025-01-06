@@ -183,6 +183,26 @@ export function RideContextProvider({children}){
         }
     },[token])
 
+    const sendSOS = useCallback(async(rideId)=>{
+        try {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/ride/emergency`,{
+                params:{
+                    rideId: rideId,
+                    lat: 0.00,
+                    lng: 0.00
+                },
+                headers:{
+                    Authorization: token
+                }
+            });
+            console.log(response.data);
+            
+        } catch (error) {
+          console.log(error.response.data.errorCode+" : "+error.response.data.message);
+        }
+      },[token])
+
     return (
       <rideContext.Provider
         value={{
@@ -202,7 +222,8 @@ export function RideContextProvider({children}){
           changeRideStatus,
           getTimeFromDate,
           setUpdateData,
-          updateRide
+          updateRide,
+          sendSOS
         }}
       >
         {children}
