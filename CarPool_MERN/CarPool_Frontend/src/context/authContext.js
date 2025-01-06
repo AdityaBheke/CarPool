@@ -11,7 +11,7 @@ export function AuthContextProvider({children}){
     const [token, setToken] = useState('');
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const baseUrl = process.env.REACT_APP_BACKEND_URL;
+    const [emergencyContacts, setEmergencyContacts] = useState([]);
 
     const getLoggedInUser = useCallback(()=>{
       const prevUser = localStorage.getItem('user');
@@ -24,6 +24,7 @@ export function AuthContextProvider({children}){
     },[])
     const signUpUser = async(userDetails)=>{
         console.log("User Data",userDetails);
+        const baseUrl = process.env.REACT_APP_BACKEND_URL;
         try {
           const response = await axios.post(`${baseUrl}/users/signup`,{
             ...userDetails
@@ -43,6 +44,7 @@ export function AuthContextProvider({children}){
     }
     const signInUser = async(userCredentials)=>{
         console.log("User Credentials",userCredentials);
+        const baseUrl = process.env.REACT_APP_BACKEND_URL;
         try {
           const response = await axios.post(`${baseUrl}/users/signin`,{
             ...userCredentials
@@ -74,6 +76,30 @@ export function AuthContextProvider({children}){
       localStorage.setItem('user', "");
       localStorage.setItem('token', "");
     }
+
+    const handleOnChange = useCallback((e,index)=>{
+      const {name, value} = e.target;
+      setEmergencyContacts((prevContact)=>
+        prevContact.map((contact,i)=>i===index?({...contact,[name]:value}):contact)
+      )
+    },[])
+
+    const updateEmergencyContacts = useCallback(async()=>{
+      try {
+        const backendURL = process.env.REACT_APP_BACKEND_URL;
+        const response = await axios.put(`${backendURL}/users/edit`,{
+          emergencyContacts: emergencyContacts
+        },{
+          headers:{
+            Authorization:token
+          }
+        })
+        setUser(response.data.user);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      } catch (error) {
+        console.log(error.response?.data || error.message || error);
+      }
+    },[emergencyContacts, token])
     return (
       <authContext.Provider
         value={{
@@ -83,7 +109,11 @@ export function AuthContextProvider({children}){
           token,
           user,
           logoutUser,
-          getLoggedInUser
+          getLoggedInUser,
+          emergencyContacts,
+          setEmergencyContacts,
+          handleOnChange,
+          updateEmergencyContacts
         }}
       >
         {children}

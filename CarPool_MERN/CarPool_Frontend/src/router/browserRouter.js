@@ -12,6 +12,7 @@ import SignUp from './../pages/authPage/SignUp';
 import SignIn from './../pages/authPage/SignIn';
 import RideDetails from "../pages/rideDetails/RideDetails";
 import Booking from "../pages/bookingPage/Booking";
+import AddEmergencyContacts from "../pages/addEmergencyContact/addEmergencyContact";
 
 export const browserRouter = createBrowserRouter([
     {
@@ -83,5 +84,9 @@ export const browserRouter = createBrowserRouter([
     {
       path:'/updateBooking',
       element: <Booking type={'update'} />
+    },
+    {
+      path:'/addEmergency',
+      element: <AddEmergencyContacts />
     }
   ]);
