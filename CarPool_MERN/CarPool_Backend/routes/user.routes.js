@@ -15,7 +15,7 @@ userRouter.post('/signin', (req, res, next)=>{
 userRouter.get('/',auth, (req, res, next)=>{
     userControllerObj.findByUserId(req, res, next);
 })
-userRouter.put('/edit/:id',auth, (req, res, next)=>{
+userRouter.put('/edit',auth, (req, res, next)=>{
     userControllerObj.updateUser(req, res, next);
 })
 userRouter.get('/delete/:id',auth, (req, res, next)=>{
