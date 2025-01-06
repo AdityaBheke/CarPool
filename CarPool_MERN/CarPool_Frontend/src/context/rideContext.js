@@ -183,14 +183,21 @@ export function RideContextProvider({children}){
         }
     },[token])
 
+    const getCoords = useCallback(()=>{
+        return new Promise((res, rej)=>{
+            navigator.geolocation.getCurrentPosition((position)=>res(position),(error)=>rej(error))
+        })
+    },[])
+
     const sendSOS = useCallback(async(rideId)=>{
         try {
+            const position = await getCoords();
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/ride/emergency`,{
                 params:{
                     rideId: rideId,
-                    lat: 0.00,
-                    lng: 0.00
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
                 },
                 headers:{
                     Authorization: token
@@ -201,7 +208,7 @@ export function RideContextProvider({children}){
         } catch (error) {
           console.log(error.response.data.errorCode+" : "+error.response.data.message);
         }
-      },[token])
+      },[token,getCoords])
 
     return (
       <rideContext.Provider
