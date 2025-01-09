@@ -98,11 +98,11 @@ const mapServices = {
         }
         // customize url 
         const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-        const URL = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&waypoints=via:${waypoints.join('|via:')}&key=${API_KEY}`;
+        const URL = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&mode=driving&key=${API_KEY}`;
         try {
             const response = await axios.get(URL);
             if (response.data.status == 'OK') {
-                return response.data.routes[0];
+                return response.data;
             } else {
                 throw new customError(404, "Directions not found");
             }

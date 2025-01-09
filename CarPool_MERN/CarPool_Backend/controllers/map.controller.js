@@ -33,7 +33,7 @@ class MapController{
             const {origin, destination} = req.query;
             const {waypoints} = req.body;
             const result = await mapServices.getDirections(origin, destination, waypoints);
-            res.status(200).send({success: true, result});
+            res.status(200).json(result);
         } catch (error) {
             next(error)
         }
