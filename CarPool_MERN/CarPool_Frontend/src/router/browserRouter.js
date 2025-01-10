@@ -13,6 +13,7 @@ import SignIn from './../pages/authPage/SignIn';
 import RideDetails from "../pages/rideDetails/RideDetails";
 import Booking from "../pages/bookingPage/Booking";
 import AddEmergencyContacts from "../pages/addEmergencyContact/addEmergencyContact";
+import MapPage from "../pages/mapPage/MapPage";
 
 export const browserRouter = createBrowserRouter([
     {
@@ -88,5 +89,8 @@ export const browserRouter = createBrowserRouter([
     {
       path:'/addEmergency',
       element: <AddEmergencyContacts />
+    },{
+      path:'/map',
+      element:<MapPage />
     }
   ]);
