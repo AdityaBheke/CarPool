@@ -8,6 +8,8 @@ const { errorHandler } = require('./middlewares/errorhandler.middleware.js');
 const cookieParser = require('cookie-parser');
 const bookingRouter = require('./routes/booking.routes.js');
 const mapRouter = require('./routes/map.route.js');
+const {setUpSocket} = require('./socket/socket.js')
+const http = require('http');
 
 // Env variables
 require('dotenv').config(); 
@@ -42,6 +44,10 @@ app.use((req,res)=>{
 })
 app.use(errorHandler);
 
-app.listen(port, () => {
+const server = http.createServer(app);
+
+setUpSocket(server);
+
+server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
