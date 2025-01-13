@@ -4,23 +4,38 @@ import { useRideContext } from './../../context/rideContext'
 import { socket } from '../../socket/socket';
 import { useDebounce } from '../../hooks/useDebounce';
 import {useAuthContext} from './../../context/authContext';
+import { useNavigate } from 'react-router-dom';
+import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 export default function MapPage() {
+    const {isLoaded} = useLoadScript({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+    })
+    const navigate = useNavigate();
     const {rideDetails} = useRideContext();
     const {user} = useAuthContext();
     const [location, setLocation] = useState({lat: 0, lng: 0});
-    // const [otherLocations, setOtherLocations] = useState([]);
+    const [otherLocations, setOtherLocations] = useState([]);
 
     // TODO: Optimize this
-    const debouncedUpdate = useDebounce(({lat, lng})=>{
+    const debouncedOwnUpdate = useDebounce(({lat, lng})=>{
         setLocation({lat, lng});
     },3000)
-    const handleLocationUpdate = useCallback((location)=>{
-        debouncedUpdate(location)
-    },[debouncedUpdate])
+    const handleOwnLocationUpdate = useCallback(({lat, lng})=>{
+        debouncedOwnUpdate({lat, lng})
+    },[debouncedOwnUpdate])
+
+    const debouncedOtherUpdate = useDebounce(({id, lat, lng, name})=>{
+        // 
+        setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id),{id, lat, lng, name}])
+        console.log(`Current name: ${user.name}, Received Name: ${name}`);
+    },3000)
+    const handleOtherLocationUpdate = useCallback(({id, lat, lng, name})=>{
+        debouncedOtherUpdate({id, lat, lng, name})
+    },[debouncedOtherUpdate])
 
     // Join Room related to specific ride on page load;
     useEffect(()=>{
-        socket.emit('joinRoom',rideDetails._id)
+        socket.emit('joinRoom', rideDetails._id)
     },[rideDetails])
 
     // Track live location of user
@@ -32,7 +47,7 @@ export default function MapPage() {
             const watchId = navigator.geolocation.watchPosition((position)=>{
                 const {latitude, longitude} = position.coords;
                 // Update user's current location
-                handleLocationUpdate({lat:latitude, lng:longitude});
+                handleOwnLocationUpdate({lat:latitude, lng:longitude});
                 // Emit/send updated coords to server with roomId
                 socket.emit('locationUpdate', {rideId: rideDetails._id, lat: latitude, lng: longitude, name:user.name})
             },(error)=>{
@@ -41,19 +56,61 @@ export default function MapPage() {
             // Clear Up watchPostion
             return (()=>{navigator.geolocation.clearWatch(watchId)})
         }
-    },[rideDetails, handleLocationUpdate, user]);
+    },[rideDetails, handleOwnLocationUpdate, user]);
 
     useEffect(()=>{
         socket.on('newLocation', ({id, lat, lng, name})=>{
             // Set locations of every user except own in otherLocations array
-            // setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id), {id, lat, lng}])
-            console.log(`Current user: ${user.name} Received User: ${name}`);
-            
+            handleOtherLocationUpdate({id, lat, lng, name})
         })
-    },[user])
+    },[handleOtherLocationUpdate])
+
+    const goBack = useCallback(()=>{
+        navigate(-1);
+    },[navigate])
     
-    return <div className={styles.main}>
-        {`My Location ${location.lat}, ${location.lng}`}
-        {/* {console.log("Other locations: ", otherLocations)} */}
-    </div>
+    return (
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <button onClick={goBack} className={styles.backButton}>
+            <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>
+          </button>
+          <div className={styles.pageHead}>Map</div>
+        </div>
+        {isLoaded ? (
+          <div className={styles.mapContainer}>
+            <GoogleMap
+              center={location}
+              zoom={11}
+              mapContainerStyle={{ height: "100%", width: "100%" }}
+            >
+              {/* TODO: Replace hardcoded lat-lng with location state */}
+              <Marker
+                position={{lat: 19.0084865, lng: 73.937309}}
+                label={{
+                    text: 'You',
+                    color:'black',
+                    fontSize: '18px',
+                    className: styles.markerLabel
+                }}
+              />
+              {otherLocations.map((loc) => (
+                <Marker
+                  key={loc.id}
+                  position={{ lat: loc.lat, lng: loc.lng }}
+                  label={{
+                    text: loc.name,
+                    color:'black',
+                    fontSize: '18px',
+                    className: styles.markerLabel
+                  }}
+                />
+              ))}
+            </GoogleMap>
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
+    );
 }
