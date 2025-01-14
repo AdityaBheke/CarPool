@@ -11,6 +11,7 @@ const setUpSocket = (server) => {
     // Join particular group related to ride.
     socket.on("joinRoom", (rideId) => {
       socket.join(rideId);
+      socket.broadcast.to(rideId).emit('newUserJoined');
       console.log(`User with socketId ${socket.id} joined Ride ${rideId}`);
     });
     // Listen/Receive updated coords
@@ -19,6 +20,10 @@ const setUpSocket = (server) => {
       socket.broadcast.to(rideId).emit("newLocation", { id: socket.id, lat, lng, name });
     });
 
+    socket.on('leaveRoom',(rideId)=>{
+      socket.leave(rideId);
+      console.log(`User with socketId ${socket.id} left Ride ${rideId}`);
+    })
     socket.on("disconnect", () => {
       console.log("User disconnected: ", socket.id);
     });
