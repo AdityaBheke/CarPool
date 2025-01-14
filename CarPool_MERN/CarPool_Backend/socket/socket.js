@@ -1,18 +1,19 @@
 const socketio = require("socket.io");
 const setUpSocket = (server) => {
+  const frontEndUrl = process.env.FRONTEND_URL;
   const io = new socketio.Server(server,{
     cors: {
-      origin: "http://localhost:3000",
+      origin: frontEndUrl,
       methods: ["GET", "POST"],
     },
   });
   io.on("connection", (socket) => {
-    console.log("User connected: ", socket.id);
+    // console.log("User connected: ", socket.id);
     // Join particular group related to ride.
     socket.on("joinRoom", (rideId) => {
       socket.join(rideId);
       socket.broadcast.to(rideId).emit('newUserJoined');
-      console.log(`User with socketId ${socket.id} joined Ride ${rideId}`);
+      // console.log(`User with socketId ${socket.id} joined Ride ${rideId}`);
     });
     // Listen/Receive updated coords
     socket.on("locationUpdate", ({ rideId, lat, lng, name }) => {
@@ -21,11 +22,12 @@ const setUpSocket = (server) => {
     });
 
     socket.on('leaveRoom',(rideId)=>{
+      socket.broadcast.to(rideId).emit('removeUser', {id: socket.id});
       socket.leave(rideId);
-      console.log(`User with socketId ${socket.id} left Ride ${rideId}`);
+      // console.log(`User with socketId ${socket.id} left Ride ${rideId}`);
     })
     socket.on("disconnect", () => {
-      console.log("User disconnected: ", socket.id);
+      // console.log("User disconnected: ", socket.id);
     });
   });
   return io
