@@ -17,6 +17,7 @@ export default function MapPage() {
     const [otherLocations, setOtherLocations] = useState([]);
 
     // TODO: Optimize this
+    // TO update own location
     const debouncedOwnUpdate = useDebounce(({lat, lng})=>{
         setLocation({lat, lng});
     },3000)
@@ -24,8 +25,8 @@ export default function MapPage() {
         debouncedOwnUpdate({lat, lng})
     },[debouncedOwnUpdate])
 
+    // To update location of all connected users
     const debouncedOtherUpdate = useDebounce(({id, lat, lng, name})=>{
-        // 
         setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id),{id, lat, lng, name}])
         console.log(`Current name: ${user.name}, Received Name: ${name}`);
     },3000)
@@ -46,17 +47,21 @@ export default function MapPage() {
             // Watch position of user continuously.
             const watchId = navigator.geolocation.watchPosition((position)=>{
                 const {latitude, longitude} = position.coords;
-                // Update user's current location
-                handleOwnLocationUpdate({lat:latitude, lng:longitude});
+                // Refresh location only when lat-lng ara changed
+                if (location.lat !== latitude || location.lng !== longitude) {
+                  // Update user's current location
+                  handleOwnLocationUpdate({lat:latitude, lng:longitude});
+                  
+                }
                 // Emit/send updated coords to server with roomId
-                socket.emit('locationUpdate', {rideId: rideDetails._id, lat: latitude, lng: longitude, name:user.name})
+                  socket.emit('locationUpdate', {rideId: rideDetails._id, lat: latitude, lng: longitude, name:user.name})
             },(error)=>{
                 console.log("Error while watching position", error);
             })
             // Clear Up watchPostion
             return (()=>{navigator.geolocation.clearWatch(watchId)})
         }
-    },[rideDetails, handleOwnLocationUpdate, user]);
+    },[rideDetails, handleOwnLocationUpdate, user, location]);
 
     useEffect(()=>{
         socket.on('newLocation', ({id, lat, lng, name})=>{
@@ -85,6 +90,7 @@ export default function MapPage() {
               mapContainerStyle={{ height: "100%", width: "100%" }}
             >
               {/* TODO: Replace hardcoded lat-lng with location state */}
+              {/* Marker for own location */}
               <Marker
                 position={{lat: 19.0084865, lng: 73.937309}}
                 label={{
@@ -94,6 +100,7 @@ export default function MapPage() {
                     className: styles.markerLabel
                 }}
               />
+              {/* Markers for location of all connected users */}
               {otherLocations.map((loc) => (
                 <Marker
                   key={loc.id}
