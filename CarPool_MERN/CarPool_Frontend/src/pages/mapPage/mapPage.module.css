@@ -1,5 +1,5 @@
 .main{
-    padding: 1rem;
+    padding: 1.5rem;
     height: 100%;
     width: 100%;
     display: flex;
@@ -26,6 +26,13 @@
 .mapContainer{
     width: 100%;
     flex-grow: 1;
+    
+}
+.map {
+    height: 100%;
+    width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 4px 0px var(--background);
 }
 .markerLabel{
     position: absolute;

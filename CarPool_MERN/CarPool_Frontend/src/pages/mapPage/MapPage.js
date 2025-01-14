@@ -2,10 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import styles from './mapPage.module.css';
 import { useRideContext } from './../../context/rideContext'
 import { socket } from '../../socket/socket';
-// import { useDebounce } from '../../hooks/useDebounce';
 import {useAuthContext} from './../../context/authContext';
 import { useNavigate } from 'react-router-dom';
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, Marker, useLoadScript, DirectionsRenderer, MarkerClusterer } from '@react-google-maps/api';
 export default function MapPage() {
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
@@ -15,6 +14,7 @@ export default function MapPage() {
     const {user} = useAuthContext();
     const [location, setLocation] = useState({lat: 0, lng: 0});
     const [otherLocations, setOtherLocations] = useState([]);
+    const [route, setRoute] = useState(null);
 
     // Emit/send updated coords to server with roomId
     const refreshLocation = useCallback(({lat, lng})=>{
@@ -79,6 +79,28 @@ export default function MapPage() {
         }
     },[user])
 
+    // Fetch directions from directionService
+    useEffect(()=>{
+      if (isLoaded && window.google) {
+        const fetchDirection = () => {
+          const directionService = new window.google.maps.DirectionsService();
+          directionService.route({
+            origin: rideDetails.endLocation.coordinates,
+            destination: rideDetails.startLocation.coordinates,
+            // waypoints:[{location: {lat:18.7617005, lng: 73.8625981}, stopover: true}],
+            travelMode: window.google.maps.TravelMode.DRIVING
+          },(response,status)=>{
+            if (status===window.google.maps.DirectionsStatus.OK) {
+              console.log('Directions fetched', response);
+              setRoute(response)
+            }
+          })
+        };
+        fetchDirection();
+      }
+      
+    },[isLoaded, rideDetails])
+
     const goBack = useCallback(()=>{
         navigate(-1);
     },[navigate])
@@ -95,33 +117,59 @@ export default function MapPage() {
           <div className={styles.mapContainer}>
             <GoogleMap
               center={location}
-              zoom={11}
-              mapContainerStyle={{ height: "100%", width: "100%" }}
+              zoom={10}
+              mapContainerClassName= {styles.map}
+              options={{
+                fullscreenControl: false,
+                mapTypeControl: false
+              }}
             >
-              {/* TODO: Replace hardcoded lat-lng with location state */}
               {/* Marker for own location */}
-              <Marker
-                position={{lat: 19.0084865, lng: 73.937309}}
-                label={{
-                    text: 'You',
-                    color:'black',
-                    fontSize: '18px',
-                    className: styles.markerLabel
+              <MarkerClusterer>
+                {(clusterer) => {
+                  return (
+                    <>
+                      <Marker
+                        position={location}
+                        icon={{
+                          url: "https://cdn-icons-png.flaticon.com/128/18292/18292370.png",
+                          scaledSize: new window.google.maps.Size(32, 32),
+                        }}
+                        label={{
+                          text: "You",
+                          color: "black",
+                          fontSize: "18px",
+                          className: styles.markerLabel,
+                        }}
+                        clusterer={clusterer}
+                      />
+                      {/* Markers for location of all connected users */}
+                      {otherLocations.map((loc) => (
+                        <Marker
+                          key={loc.id}
+                          position={{ lat: loc.lat, lng: loc.lng }}
+                          icon={{
+                            url: "https://cdn-icons-png.flaticon.com/128/18292/18292370.png",
+                            scaledSize: new window.google.maps.Size(32, 32),
+                          }}
+                          label={{
+                            text: loc.name,
+                            color: "black",
+                            fontSize: "18px",
+                            className: styles.markerLabel,
+                          }}
+                          clusterer={clusterer}
+                        />
+                      ))}
+                    </>
+                  );
                 }}
-              />
-              {/* Markers for location of all connected users */}
-              {otherLocations.map((loc) => (
-                <Marker
-                  key={loc.id}
-                  position={{ lat: loc.lat, lng: loc.lng }}
-                  label={{
-                    text: loc.name,
-                    color:'black',
-                    fontSize: '18px',
-                    className: styles.markerLabel
-                  }}
-                />
-              ))}
+              </MarkerClusterer>
+
+              {/* Direction renderer to display direction on map */}
+              {route && (
+                <DirectionsRenderer directions={route}></DirectionsRenderer>
+              )}
             </GoogleMap>
           </div>
         ) : (
