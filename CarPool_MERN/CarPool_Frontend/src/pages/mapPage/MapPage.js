@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import styles from './mapPage.module.css';
 import { useRideContext } from './../../context/rideContext'
 import { socket } from '../../socket/socket';
-import { useDebounce } from '../../hooks/useDebounce';
+// import { useDebounce } from '../../hooks/useDebounce';
 import {useAuthContext} from './../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
@@ -16,28 +16,32 @@ export default function MapPage() {
     const [location, setLocation] = useState({lat: 0, lng: 0});
     const [otherLocations, setOtherLocations] = useState([]);
 
-    // TODO: Optimize this
-    // TO update own location
-    const debouncedOwnUpdate = useDebounce(({lat, lng})=>{
-        setLocation({lat, lng});
-    },3000)
-    const handleOwnLocationUpdate = useCallback(({lat, lng})=>{
-        debouncedOwnUpdate({lat, lng})
-    },[debouncedOwnUpdate])
-
-    // To update location of all connected users
-    const debouncedOtherUpdate = useDebounce(({id, lat, lng, name})=>{
-        setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id),{id, lat, lng, name}])
-        console.log(`Current name: ${user.name}, Received Name: ${name}`);
-    },3000)
-    const handleOtherLocationUpdate = useCallback(({id, lat, lng, name})=>{
-        debouncedOtherUpdate({id, lat, lng, name})
-    },[debouncedOtherUpdate])
+    // Emit/send updated coords to server with roomId
+    const refreshLocation = useCallback(({lat, lng})=>{
+      socket.emit('locationUpdate', {rideId: rideDetails._id, lat: lat, lng: lng, name:user.name})
+    },[rideDetails, user])
 
     // Join Room related to specific ride on page load;
     useEffect(()=>{
         socket.emit('joinRoom', rideDetails._id)
+
+        return ()=>{
+          socket.emit('leaveRoom', rideDetails._id)
+        }
     },[rideDetails])
+
+    // Emit/send location to all users again when new user joins the room/ride
+    useEffect(()=>{
+      const handleNewUserJoined = ()=>{
+        console.log('new user joined');
+        refreshLocation(location);
+      }
+      socket.on('newUserJoined', handleNewUserJoined);
+
+      return ()=>{
+        socket.off('newUserJoined', handleNewUserJoined)
+      }
+    },[location, refreshLocation])
 
     // Track live location of user
     useEffect(()=>{
@@ -47,28 +51,33 @@ export default function MapPage() {
             // Watch position of user continuously.
             const watchId = navigator.geolocation.watchPosition((position)=>{
                 const {latitude, longitude} = position.coords;
-                // Refresh location only when lat-lng ara changed
-                if (location.lat !== latitude || location.lng !== longitude) {
-                  // Update user's current location
-                  handleOwnLocationUpdate({lat:latitude, lng:longitude});
-                  
-                }
-                // Emit/send updated coords to server with roomId
-                  socket.emit('locationUpdate', {rideId: rideDetails._id, lat: latitude, lng: longitude, name:user.name})
+                // Refresh location only when lat-lng are changed
+                setLocation((prev)=>{
+                  if (prev.lat !== latitude || prev.lng !== longitude) {
+                    refreshLocation({lat: latitude, lng: longitude})
+                    return {lat: latitude, lng: longitude}
+                  }
+                  return prev
+                })
             },(error)=>{
                 console.log("Error while watching position", error);
             })
             // Clear Up watchPostion
             return (()=>{navigator.geolocation.clearWatch(watchId)})
         }
-    },[rideDetails, handleOwnLocationUpdate, user, location]);
+    },[refreshLocation]);
 
     useEffect(()=>{
         socket.on('newLocation', ({id, lat, lng, name})=>{
             // Set locations of every user except own in otherLocations array
-            handleOtherLocationUpdate({id, lat, lng, name})
+            setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id),{id, lat, lng, name}])
+            console.log(`Current name: ${user.name}, Received Name: ${name}`);
         })
-    },[handleOtherLocationUpdate])
+
+        return ()=>{
+          socket.off('newLocation')
+        }
+    },[user])
 
     const goBack = useCallback(()=>{
         navigate(-1);
