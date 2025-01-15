@@ -12,13 +12,13 @@ const auth = (req, res, next)=>{
     }
 
     if (!token) {
-        throw new customError(400, 'Bad request Token not available')
+        throw new customError(401, 'Bad request Token not available')
     }
     try {
         const payload = jwt.verify(token, 'secret');
         req.userId = payload.userId;
     } catch (error) {
-        throw new customError(400, 'Token expired')
+        throw new customError(401, 'Token expired')
     }
     next()
 }

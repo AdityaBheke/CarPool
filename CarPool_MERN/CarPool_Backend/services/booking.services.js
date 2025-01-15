@@ -20,7 +20,7 @@ const bookingServices = {
                 throw new customError(404, "Ride not found");
             }
             if (ride.passengers.find((passenger)=>passenger.primaryPassenger==userId)) {
-                throw new customError(400, "Booking already present for this ride");
+                throw new customError(409, "Booking already present for this ride");
             }
             // Create booking using booking data
             const booking = new Booking(bookingData);
@@ -40,7 +40,7 @@ const bookingServices = {
             // return created booking
             return {success: true, booking: createdBooking};
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while creating a booking');
+            throw new customError(error.statusCode || 500, error.message || 'Error while creating a booking');
         }
     },
     // Update a Booking
@@ -68,7 +68,7 @@ const bookingServices = {
             // return updated booking
             return {success: true, booking: updatedBooking};
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while updating a booking');
+            throw new customError(error.statusCode || 500, error.message || 'Error while updating a booking');
         }
     },
     // get Booking by Booking Id
@@ -81,7 +81,7 @@ const bookingServices = {
             }
             return {success: true, booking: booking}
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while fetching a booking');
+            throw new customError(error.statusCode || 500, error.message || 'Error while fetching a booking');
         }
     },
     // get Booking by passenger Id
@@ -96,7 +96,7 @@ const bookingServices = {
             const bookings = await Booking.find({passengerId: userId});
             return {success: true, bookings: bookings};
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while fetching bookings');
+            throw new customError(error.statusCode || 500, error.message || 'Error while fetching bookings');
         }
     },
     // Cancel a Booking
@@ -125,7 +125,7 @@ const bookingServices = {
             await Booking.updateOne({_id: booking._id},booking);
             return {success: true, cancelledBooking: booking }
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while canceling a booking');
+            throw new customError(error.statusCode || 500, error.message || 'Error while canceling a booking');
         }
     }
 }

@@ -30,7 +30,7 @@ const mapServices = {
                 throw new customError(404, "Provide valid address. Check typo or try different location")
             }
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || "Unable to fetch coordinates")
+            throw new customError(error.statusCode || 500, error.message || "Unable to fetch coordinates")
         }
     },
 
@@ -56,7 +56,7 @@ const mapServices = {
                 throw new customError(404,'Location not found')
             }
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || "Unable to fetch suggetions");
+            throw new customError(error.statusCode || 500, error.message || "Unable to fetch suggetions");
         }
     },
 
@@ -84,7 +84,7 @@ const mapServices = {
                 throw new customError(404, "Location not found. Check typo or try different places");
             }
         } catch (error) {
-            throw new customError(error.statusCode||400, error.message || "Unable to fetch distance and time")
+            throw new customError(error.statusCode||500, error.message || "Unable to fetch distance and time")
         }
         
     },
@@ -107,7 +107,7 @@ const mapServices = {
                 throw new customError(404, "Directions not found");
             }
         } catch (error) {
-            throw new customError(error.statusCode||400, error.message || "Unable to get directions")
+            throw new customError(error.statusCode||500, error.message || "Unable to get directions")
         }
     },
     getDirectionsByPlaceId: async (originId, destinationId)=>{
@@ -126,7 +126,7 @@ const mapServices = {
                 throw new customError(404, "Directions not found");
             }
         } catch (error) {
-            throw new customError(error.statusCode||400, error.message || "Unable to get directions")
+            throw new customError(error.statusCode||500, error.message || "Unable to get directions")
         }
     }
 }

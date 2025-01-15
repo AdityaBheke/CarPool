@@ -83,7 +83,7 @@ const rideServices = {
       return { success: true, ride: createdRide };
     } catch (error) {
       throw new customError(
-        400,
+        500,
         error.message || "Error while publishing a ride"
       );
     }
@@ -182,7 +182,7 @@ const rideServices = {
       return { success: true, ride: rideData };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while updating a ride"
       );
     }
@@ -210,7 +210,7 @@ const rideServices = {
 
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while updating a ride"
       );
     }
@@ -260,7 +260,7 @@ const rideServices = {
       return { success: true, ride: isValidRide };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while updating passengers inside ride"
       );
     }
@@ -294,7 +294,7 @@ const rideServices = {
       return { success: true, ride: isValidRide };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while removing passenger from ride"
       );
     }
@@ -308,7 +308,7 @@ const rideServices = {
       return { success: true, ride: ride };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while getting rides"
       );
     }
@@ -321,7 +321,7 @@ const rideServices = {
         return {success: true, rides: rides}
     } catch (error) {
         throw new customError(
-            error.statusCode || 400,
+            error.statusCode || 500,
             error.message || "Error while getting rides"
           );
     }
@@ -334,7 +334,7 @@ const rideServices = {
       return { success: true, rides: rides };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while getting rides"
       );
     }
@@ -368,7 +368,7 @@ const rideServices = {
       return { success: true, rides: rides };
     } catch (error) {
       throw new customError(
-        error.statusCode || 400,
+        error.statusCode || 500,
         error.message || "Error while getting rides"
       );
     }
@@ -400,7 +400,7 @@ const rideServices = {
     } catch (error) {
         console.log(error);
         
-        throw new customError(error.statusCode || 400, error.message || 'Error while sending alert message');
+        throw new customError(error.statusCode || 500, error.message || 'Error while sending alert message');
     }
 }
 };

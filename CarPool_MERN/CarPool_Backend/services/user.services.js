@@ -16,7 +16,7 @@ const userServices = {
             const createdUser = await user.save();
             return {success: true, user: createdUser};
         } catch (error) {
-            throw new customError(400, error.message || 'Error while creating user');
+            throw new customError(500, error.message || 'Error while creating user');
         }
     },
     findByEmail: async(email)=>{
@@ -28,7 +28,7 @@ const userServices = {
                 throw new customError(404, 'User not found');
             }
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while fetching user by email');
+            throw new customError(error.statusCode || 500, error.message || 'Error while fetching user by email');
         }
     },
     findByUserId: async(userId)=>{
@@ -40,7 +40,7 @@ const userServices = {
                 throw new customError(404, 'User not found');
             }
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while fetching user by id');
+            throw new customError(error.statusCode || 500, error.message || 'Error while fetching user by id');
         }
     },
     updateUser: async(userId, userData)=>{
@@ -58,7 +58,7 @@ const userServices = {
             const updatedUser = await user.save()
             return {success: true, user: updatedUser};
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while updating user');
+            throw new customError(error.statusCode || 500, error.message || 'Error while updating user');
         }
     },
     removeUser: async(userId)=>{
@@ -70,7 +70,7 @@ const userServices = {
             }
             return {success: true, message : "User removed successfully"};
         } catch (error) {
-            throw new customError(error.statusCode || 400, error.message || 'Error while updating user');
+            throw new customError(error.statusCode || 500, error.message || 'Error while updating user');
         }
     }
 }
