@@ -33,7 +33,7 @@ export default function MapPage() {
     // Emit/send location to all users again when new user joins the room/ride
     useEffect(()=>{
       const handleNewUserJoined = ()=>{
-        console.log('new user joined');
+        // console.log('new user joined');
         refreshLocation(location);
       }
       socket.on('newUserJoined', handleNewUserJoined);
@@ -45,7 +45,7 @@ export default function MapPage() {
 
     // Track live location of user
     useEffect(()=>{
-        console.log('Rerender');
+        // console.log('Rerender');
         
         if (navigator.geolocation) {
             // Watch position of user continuously.
@@ -53,7 +53,7 @@ export default function MapPage() {
                 const {latitude, longitude} = position.coords;
                 // Refresh location only when lat-lng are changed
                 setLocation((prev)=>{
-                  if (prev.lat !== latitude || prev.lng !== longitude) {
+                  if (prev.lat !== latitude || prev.lng !== longitude || prev.lat === 0 || prev.lng === 0) {
                     refreshLocation({lat: latitude, lng: longitude})
                     return {lat: latitude, lng: longitude}
                   }
@@ -67,17 +67,25 @@ export default function MapPage() {
         }
     },[refreshLocation]);
 
+    // Update location of other users
     useEffect(()=>{
         socket.on('newLocation', ({id, lat, lng, name})=>{
             // Set locations of every user except own in otherLocations array
             setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id),{id, lat, lng, name}])
-            console.log(`Current name: ${user.name}, Received Name: ${name}`);
+            // console.log(`Current name: ${user.name}, Received Name: ${name}`);
         })
 
         return ()=>{
           socket.off('newLocation')
         }
     },[user])
+
+    // Remove user from otherLocations array
+    useEffect(()=>{
+      socket.on('removeUser', ({id})=>{
+        setOtherLocations((prev)=>[...prev.filter(loc=>loc.id!==id)])
+      })
+    },[])
 
     // Fetch directions from directionService
     useEffect(()=>{
@@ -91,7 +99,7 @@ export default function MapPage() {
             travelMode: window.google.maps.TravelMode.DRIVING
           },(response,status)=>{
             if (status===window.google.maps.DirectionsStatus.OK) {
-              console.log('Directions fetched', response);
+              // console.log('Directions fetched', response);
               setRoute(response)
             }
           })
