@@ -9,6 +9,9 @@
     flex-direction: column;
     gap: 0.5rem;
 }
+.rideCard:hover{
+    box-shadow: 0px 0px 6px 0px var(--background-dark);
+}
 .rideInfo{
     display: flex;
     font-size: 1.2rem;

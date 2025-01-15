@@ -25,9 +25,15 @@
 .search{
     padding: 1rem;
     background-color: var(--accent);
-    color: var(--white);
+    color: var(--light);
     border: none;
     border-radius: 0.5rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 6px 1px var(--background);
+    transition: all 0.2s ease-in-out;
+}
+.search:hover{
+    box-shadow: 2px 2px 6px 1px var(--background-dark);
 }
 @media screen and (min-width: 600px) {
 }

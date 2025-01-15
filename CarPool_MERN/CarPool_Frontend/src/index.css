@@ -13,11 +13,12 @@ code {
 }
 :root{
   --darker: #1A1A2E;
-  --dark: #16213E;
+  --dark: #0c2748;
   --accent: #0F3460;
   --highlight: #E94560;
   --light: #D9E7FF;
   --background: #a2a2a2;
+  --background-dark: #4e4e4e;
   --black: #000000;
   --white: #ffffff;
   --danger: rgb(255, 42, 42);
