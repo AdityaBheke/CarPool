@@ -50,6 +50,7 @@
     color: var(--accent);
 }
 .formInput{
+    width: 100%;
     flex-grow: 1;
     border: none;
     outline: none;
@@ -63,6 +64,7 @@
     display: flex;
     gap: 1rem;
     padding-bottom: 2rem;
+    align-items: center;
 }
 .button{
     flex-grow: 1;
@@ -78,4 +80,46 @@
     background-color: var(--accent);
     color: var(--light);
     text-transform: capitalize;
+}
+
+@media screen and (min-width: 750px) {
+    .main{
+        width: 90%;
+        margin: 0 auto;
+    }
+    .form{
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: normal;
+    }
+    .itemContainer{
+        width: 45%;
+    }
+    .buttonContainer{
+        width: 65%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .main{
+        width: 85%;
+    }
+    .buttonContainer{
+        width: 60%;
+    }
+}
+
+/* Styles for screens 1200px and larger */
+@media screen and (min-width: 1200px) {
+    .main{
+        width: 75%;
+    }
+    .buttonContainer{
+        width: 50%;
+    }
+}
+
+/* Styles for screens 1500px and larger */
+@media screen and (min-width: 1500px) {
 }

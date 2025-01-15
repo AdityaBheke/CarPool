@@ -73,7 +73,8 @@ export default function RideDetails(){
             </button>
             <div className={styles.pageHead}>Ride Details</div>
           </div>
-          {/* Route Info */}
+          <div className={styles.infoContainer}>
+            {/* Route Info */}
           <div className={styles.rideInfo}>
             <div className={styles.containerHead}>Route</div>
             <div className={styles.infoItem}>
@@ -202,8 +203,10 @@ export default function RideDetails(){
                 : "No Passengers Found"}
             </div>
           </div>
+          </div>
         </div>
         <div className={styles.rideActions}>
+          <div className={styles.buttonContainer}>
           {rideDetails?.status === "active" ? (
             user._id === rideDetails?.driverId._id ? (
               <>
@@ -237,6 +240,8 @@ export default function RideDetails(){
           ) : (
             <div className={styles.statusMessage}>{rideDetails?.status}</div>
           )}
+        
+          </div>
         </div>
       </>
     );

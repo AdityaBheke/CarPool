@@ -27,7 +27,7 @@
 }
 .button{
     padding: 1rem;
-    background-color: var(--white);
+    background-color: var(--light);
     color: var(--accent);
     font-size: 1rem;
     font-weight: 600;
@@ -36,5 +36,44 @@
 }
 .signUpButton{
     background-color: var(--accent);
-    color: var(--white);
+    color: var(--light);
+}
+
+@media screen and (min-width: 600px) {
+    .main{
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+@media screen and (min-width: 750px) {
+    .main{
+        width: 65%;
+    }
+    .buttonContainer{
+        flex-direction: row;
+        gap: 1rem;
+    }
+    .button{
+        flex-grow: 1;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .main{
+        width: 50%;
+    }
+}
+
+/* Styles for screens 1200px and larger */
+@media screen and (min-width: 1200px) {
+    .main{
+        width: 40%;
+    }
+}
+
+/* Styles for screens 1500px and larger */
+@media screen and (min-width: 1500px) {
+    .main{
+        width: 35%;
+    }
 }

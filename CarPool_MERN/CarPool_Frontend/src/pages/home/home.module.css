@@ -11,5 +11,32 @@
     position: absolute;
     top: 0;
     left: 0;
-    object-fit: cover;
+    object-fit: contain;
+}
+
+@media screen and (min-width: 600px) {
+
+}
+@media screen and (min-width: 750px) {
+    .main{
+        flex-direction: row-reverse;
+        justify-content: space-evenly;
+        gap: 1rem;
+    }
+    .homeBackground{
+        position: relative;
+        max-width: 50%;
+        height: 100%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+}
+
+/* Styles for screens 1200px and larger */
+@media screen and (min-width: 1200px) {
+}
+
+/* Styles for screens 1500px and larger */
+@media screen and (min-width: 1500px) {
 }

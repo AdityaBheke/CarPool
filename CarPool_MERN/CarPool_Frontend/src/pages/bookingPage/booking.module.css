@@ -5,9 +5,22 @@
     flex-direction: column;
 }
 .header{
-    width: 100%;
     display: flex;
-    padding: 1rem 0 0 1.5rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1rem 1rem 0 1rem;
+}
+.backButton{
+    background-color: transparent;
+    color: var(--accent);
+    font-size: 1.2rem;
+    border: none;
+    padding: 0.5rem;
+    position: absolute;
+    left: 0;
 }
 .backButton{
     background-color: transparent;
@@ -27,11 +40,13 @@
     padding: 1.5rem;
 }
 .formHeader{
+    width: 100%;
+    text-align: center;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--accent);
 }
-.itemContainer{
+.itemContainer, .passengerContainer{
     width: 100%;
     padding: 1.5rem;
     display: flex;
@@ -50,6 +65,7 @@
     color: var(--accent);
 }
 .formInput{
+    width: 100%;
     flex-grow: 1;
     border: none;
     outline: none;
@@ -74,6 +90,15 @@
     font-size: 1rem;
     font-weight: 600;
 }
+.addButtonContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.addButtonContainer button{
+    flex-grow: 0;
+}
 .submitButton{
     background-color: var(--accent);
     color: var(--light);
@@ -88,4 +113,46 @@
     border: none;
     padding: 0.5rem;
     color: var(--danger);
+}
+
+
+@media screen and (min-width: 750px) {
+    .main{
+        width: 90%;
+        margin: 0 auto;
+    }
+    .itemContainer{
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .passengerContainer{
+        width: 45%;
+    }
+    .buttonContainer{
+        width: 65%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .main{
+        width: 85%;
+    }
+    .buttonContainer{
+        width: 60%;
+    }
+}
+
+/* Styles for screens 1200px and larger */
+@media screen and (min-width: 1200px) {
+    .main{
+        width: 75%;
+    }
+    .buttonContainer{
+        width: 50%;
+    }
+}
+
+/* Styles for screens 1500px and larger */
+@media screen and (min-width: 1500px) {
 }

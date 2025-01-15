@@ -8,6 +8,11 @@ export default function TabsPageLayout() {
           <Outlet />
         </div>
         <div className={styles.tabBar}>
+          <div className={`${styles.brand}`}>
+            <NavLink to="/" className={styles.tabInactive}>
+              <span>CarPool</span>
+            </NavLink>
+          </div>
           <NavLink to="/" className={({ isActive }) =>isActive ? styles.tabActive : styles.tabInactive}>
             <div className={styles.tab}>
               <i className="fi fi-rr-search"></i>

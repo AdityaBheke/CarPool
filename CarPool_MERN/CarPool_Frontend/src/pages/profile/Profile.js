@@ -47,10 +47,14 @@ export default function Profile() {
                 <div className={styles.infoValue}>{user?.age}</div>
             </div>
           </div>
-          <div className={styles.infoContainer}>
+          
+        </div>
+        <div className={styles.contactDetails}>
+          <div className={styles.contactHeader}>
             <i className="fi fi-tr-address-book"></i>
-            <div className={styles.infoItem}>
-                <div className={styles.infoKey}>Emergency contacts</div>
+            <div className={styles.infoKey}>Emergency contacts</div>
+          </div>
+          <div className={styles.contactContainer}>
                 {user?.emergencyContacts?.length>0 ? user?.emergencyContacts?.map((contact, index)=>
                   <div key={index} className={styles.contact}>
                     <div>{contact.friendlyName}</div>
@@ -58,7 +62,6 @@ export default function Profile() {
                     <div>{contact.contact}</div>
                   </div>
                 ): "No emergency contacts added"}
-            </div>
           </div>
         </div>
 

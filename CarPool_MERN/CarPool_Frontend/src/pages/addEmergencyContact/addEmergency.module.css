@@ -71,3 +71,50 @@
     background-color: var(--light);
     color: var(--accent);
 }
+
+
+@media screen and (min-width: 750px) {
+    .main{
+        width: 90%;
+        margin: 0 auto;
+    }
+    .contactForm{
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .contactContainer{
+        width: 45%;
+    }
+    .buttonContainer{
+        width: 75%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .button{
+        flex-grow: 1;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .main{
+        width: 85%;
+    }
+    .buttonContainer{
+        width: 70%;
+    }
+}
+
+/* Styles for screens 1200px and larger */
+@media screen and (min-width: 1200px) {
+    .main{
+        width: 75%;
+    }
+    .buttonContainer{
+        width: 55%;
+    }
+}
+
+/* Styles for screens 1500px and larger */
+@media screen and (min-width: 1500px) {
+}

@@ -38,8 +38,8 @@ export default function AuthPage() {
             <div className={styles.buttonContainer}>
                 <button type='submit' className={`${styles.button} ${styles.submitButton}`}>Sign in</button>
                 <button className={styles.button} onClick={handleCancel}>Cancel</button>
-                <div className={styles.switchMessage}>Already registered? <Link to={'/signup'}>Sign up</Link> here.</div>
             </div>
+            <div className={styles.switchMessage}>Already registered? <Link to={'/signup'}>Sign up</Link> here.</div>
         </form>
     </div>
 }
