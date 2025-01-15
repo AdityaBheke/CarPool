@@ -25,7 +25,7 @@ export default function Booking({type}) {
         const prevBooking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
         console.log("Prev Booking ",prevBooking);
         setAllPassengers(prevBooking?[...prevBooking.allPassengers]:[{name:"", gender:"", age: 0}]);
-        setAvailableSlots(rideDetails.availableSeats)
+        setAvailableSlots(prevBooking?rideDetails.availableSeats:rideDetails.availableSeats-1)
     },[setAllPassengers, rideDetails, user])
 
     const handleOnSubmit=useCallback(async(e)=>{
@@ -50,9 +50,11 @@ export default function Booking({type}) {
     },[handleAddPassenger, availableSlots])
 
     const removePassenger = useCallback((index)=>{
+      if (allPassengers.length>1) {
         handleRemovePassenger(index)
-        setAvailableSlots(availableSlots+1);
-    },[handleRemovePassenger,availableSlots])
+        setAvailableSlots(availableSlots+1); 
+      }
+    },[handleRemovePassenger,availableSlots, allPassengers])
 
     const handleOnChange = useCallback((e)=>{
         // Handle on change input if required in future
@@ -63,6 +65,12 @@ export default function Booking({type}) {
     },[navigate])
     return (
       <div className={styles.main}>
+        <div className={styles.header}>
+          <button onClick={handleCancel} className={styles.backButton}>
+            <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>
+          </button>
+          <div className={styles.pageHead}>Book a Ride</div>
+        </div>
         <form onSubmit={handleOnSubmit} className={styles.form}>
           <div className={styles.itemContainer}>
             <div className={styles.formHeader}>Booking Details</div>
@@ -119,7 +127,7 @@ export default function Booking({type}) {
           <div className={styles.itemContainer}>
             <div className={styles.formHeader}>Passenger Details</div>
             {allPassengers.map((passenger, index) => (
-              <div key={index} className={styles.itemContainer}>
+              <div key={index} className={styles.passengerContainer}>
                 <button
                   type="button"
                   onClick={() => {
@@ -179,6 +187,7 @@ export default function Booking({type}) {
               </div>
             ))}
             {availableSlots !== 0 && (
+              <div className={styles.addButtonContainer}>
               <button
                 type="button"
                 onClick={addPassengers}
@@ -186,6 +195,7 @@ export default function Booking({type}) {
               >
                 Add more passenger
               </button>
+              </div>
             )}
           </div>
 
