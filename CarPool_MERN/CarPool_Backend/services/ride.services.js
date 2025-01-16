@@ -391,7 +391,7 @@ const rideServices = {
           throw new customError(404, "Ride not found");
         }
         const smsContent = `\nSOS: Passenger ${user.name}\nRide: ${ride.startLocation.address} to ${ride.endLocation.address}\nDriver: ${ride.driverId.name} (${ride.driverId.mobile}) \nLoc: ${lat}, ${lng}`.trim();
-        const emailContent = `\nSOS: Passenger ${user.name}\nRide: ${ride.startLocation.address} to ${ride.endLocation.address}\nDriver: ${ride.driverId.name} (${ride.driverId.mobile}) \nLoc: ${lat}, ${lng}`.trim();
+        const emailContent = `\nPassenger ${user.name} has triggered an SOS.\n\nRide Details:\nFrom: ${ride.startLocation.address}\nTo: ${ride.endLocation.address}\nRide ID: ${ride._id}\n\nDriver Details:\nName: ${ride.driverId.name}\nContact: ${ride.driverId.mobile}\nVehicle: ${ride.vehicleDetails.vehicleName}(${ride.vehicleDetails.vehicleColor}), [${ride.vehicleDetails.vehiclePlate}]\n\nCurrent Location: ${lat}, ${lng}\nLocation URL: https://www.google.com/maps?q=${lat},${lng} \n\nTime: ${new Date()}\n\nTake immediate action!`.trim();
 
         const emailReceivers = user.emergencyContacts.map((contacts)=>contacts.email).join(',');
         await sendEmail(emailReceivers, "SOS: Immediate Assistance Required!", emailContent);

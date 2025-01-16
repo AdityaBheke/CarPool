@@ -6,8 +6,6 @@ const senderEmail = process.env.SENDER_EMAIL_ID;
 const senderPass = process.env.SENDER_EMAIL_PASS;
 
 export const sendEmail = async (receiver, subject, message)=>{
-    console.log("Mail Config", receiver);
-    
     const transport = nodeMailer.createTransport({
         service: 'gmail',
         auth: {
