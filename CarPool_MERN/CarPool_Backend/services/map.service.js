@@ -43,7 +43,7 @@ const mapServices = {
         }
         // customize url 
         const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-        const URL = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${API_KEY}`;
+        const URL = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&components=country:in&key=${API_KEY}`;
         try {
             const response = await axios.get(URL);
             if (response.data.status == 'OK') {
