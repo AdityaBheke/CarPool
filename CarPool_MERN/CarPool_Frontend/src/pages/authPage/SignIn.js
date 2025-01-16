@@ -1,8 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import styles from './authPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
 import { useForm } from '../../hooks/useForm';
+import Alert from '../../components/alert/Alert';
 
 export default function AuthPage() {
     const [signInData, setSignInData] = useForm({
@@ -11,7 +12,7 @@ export default function AuthPage() {
     });
     const navigate = useNavigate();
 
-    const {signInUser} = useAuthContext();
+    const {signInUser, errorMessage, setErrorMessage} = useAuthContext();
 
     const handleOnSubmit = useCallback(async(e)=>{
         e.preventDefault();
@@ -23,8 +24,14 @@ export default function AuthPage() {
         e.preventDefault();
         navigate('/welcome');
     },[navigate]);
-
+    useEffect(()=>{
+        return ()=>{
+            console.log('page unnmounted');
+            setErrorMessage(null)
+        }
+    },[setErrorMessage])
     return <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.pageHead}>Sign In</div>
         <form onSubmit={handleOnSubmit} className={styles.form}>
             <div className={styles.formItem}>

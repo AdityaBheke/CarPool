@@ -2,14 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
 import styles from './profile.module.css';
 import { useCallback } from 'react';
+import Alert from '../../components/alert/Alert';
 export default function Profile() {
-    const {user, logoutUser} = useAuthContext();
+    const {user, logoutUser, errorMessage} = useAuthContext();
     const navigate = useNavigate();
     const handleAddEmergency = useCallback(()=>{
       navigate('/addEmergency')
     },[navigate])
     return (
       <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.pageHeader}>Profile</div>
         <div className={styles.info}>
           <div className={styles.infoContainer}>

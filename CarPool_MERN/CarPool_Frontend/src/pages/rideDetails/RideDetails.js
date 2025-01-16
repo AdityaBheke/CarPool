@@ -4,8 +4,9 @@ import { useCallback, useEffect } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import { useAuthContext } from '../../context/authContext';
 import { useBookingContext } from '../../context/bookingContext';
+import Alert from '../../components/alert/Alert';
 export default function RideDetails(){
-    const {user} = useAuthContext();
+    const {user, errorMessage} = useAuthContext();
     const {rideId} = useParams();
     const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData, sendSOS} = useRideContext();
     const {cancelBooking} = useBookingContext();
@@ -67,6 +68,7 @@ export default function RideDetails(){
     return (
       <>
         <div className={styles.main}>
+          {errorMessage?.message && <Alert navigate={navigate}/>}
           <div className={styles.header}>
             <button onClick={goBack} className={styles.backButton}>
               <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { useRideContext } from '../../context/rideContext';
 import { useBookingContext } from '../../context/bookingContext';
 import { useAuthContext } from '../../context/authContext';
+import Alert from '../../components/alert/Alert';
 
 export default function Booking({type}) {
     const navigate = useNavigate();
     const [availableSlots, setAvailableSlots] = useState(1);
-    const {user} = useAuthContext();
+    const {user, errorMessage} = useAuthContext();
     const { rideDetails } = useRideContext();
     const {
       allPassengers,
@@ -65,6 +66,7 @@ export default function Booking({type}) {
     },[navigate])
     return (
       <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.header}>
           <button onClick={handleCancel} className={styles.backButton}>
             <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

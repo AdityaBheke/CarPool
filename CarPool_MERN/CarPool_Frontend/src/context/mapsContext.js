@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import axios from "axios";
+import { useAuthContext } from "./authContext";
 
 const mapsContext = createContext();
 export const useMapContext = ()=>{
@@ -11,6 +12,7 @@ export const useMapContext = ()=>{
 export function MapContextProvider({children}){
     const [predictions, setPredictions] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const {composeErrorMessage} = useAuthContext();
     const baseUrl = process.env.REACT_APP_BACKEND_URL;
     const searchPlace = useDebounce(async(place)=>{
         if (!place) {
@@ -27,6 +29,7 @@ export function MapContextProvider({children}){
             }
             
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response.data.message);
         }
     },1000);

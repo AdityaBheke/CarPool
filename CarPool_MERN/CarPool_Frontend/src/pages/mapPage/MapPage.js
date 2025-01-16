@@ -5,13 +5,14 @@ import { socket } from '../../socket/socket';
 import {useAuthContext} from './../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript, DirectionsRenderer, MarkerClusterer } from '@react-google-maps/api';
+import Alert from '../../components/alert/Alert';
 export default function MapPage() {
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
     })
     const navigate = useNavigate();
     const {rideDetails} = useRideContext();
-    const {user} = useAuthContext();
+    const {user, errorMessage} = useAuthContext();
     const [location, setLocation] = useState({lat: 0, lng: 0});
     const [otherLocations, setOtherLocations] = useState([]);
     const [route, setRoute] = useState(null);
@@ -115,6 +116,7 @@ export default function MapPage() {
     
     return (
       <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.header}>
           <button onClick={goBack} className={styles.backButton}>
             <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

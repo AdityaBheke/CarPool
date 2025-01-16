@@ -4,8 +4,11 @@ import { useMapContext } from '../../context/mapsContext';
 import { useNavigate } from 'react-router-dom';
 import PredictionItem from '../../components/predictionItem/PredictionItem';
 import { useEffect, useRef } from 'react';
+import Alert from '../../components/alert/Alert';
+import { useAuthContext } from '../../context/authContext';
 
 export default function SearchLocation({type}){
+    const { errorMessage } = useAuthContext();
     const {handleOnChange, searchText, predictions, clear} = useMapContext();
     const searchRef = useRef(null);
     const navigate = useNavigate();
@@ -17,6 +20,7 @@ export default function SearchLocation({type}){
         searchRef.current.focus();
     },[])
     return <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.header}>
             <button className={styles.backButton} onClick={handleOnClick}>
                 <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

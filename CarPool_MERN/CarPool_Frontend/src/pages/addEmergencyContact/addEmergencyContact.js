@@ -2,8 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import styles from './addEmergency.module.css';
 import { useCallback, useEffect } from 'react';
 import { useAuthContext } from '../../context/authContext';
+import Alert from '../../components/alert/Alert';
 export default function AddEmergencyContacts(){
-  const {user, emergencyContacts, setEmergencyContacts, handleOnChange, updateEmergencyContacts} = useAuthContext();
+  const {user, emergencyContacts, setEmergencyContacts, handleOnChange, updateEmergencyContacts, errorMessage} = useAuthContext();
     const navigate = useNavigate();
     const goBack = useCallback(()=>{
                 navigate(-1);
@@ -22,6 +23,7 @@ export default function AddEmergencyContacts(){
     },[user, setEmergencyContacts])
     return (
       <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.header}>
           <button onClick={goBack} className={styles.backButton}>
             <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

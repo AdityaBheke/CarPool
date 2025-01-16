@@ -3,7 +3,10 @@ import { useCallback } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import styles from './publishRide.module.css';
 import { useNavigate } from 'react-router-dom';
+import Alert from '../../components/alert/Alert';
+import { useAuthContext } from '../../context/authContext';
 export default function PublishRide({type}) {
+    const {errorMessage} = useAuthContext();
     const {setDate, publishData, setPublishData, publishRide, resetPublishData, updateRide} = useRideContext();
     const navigate = useNavigate();
 
@@ -41,6 +44,7 @@ export default function PublishRide({type}) {
     },[navigate, resetPublishData])
 
     return <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         {type==='update' && <div className={styles.header}>
         <button onClick={goBack} className={styles.backButton}>
               <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

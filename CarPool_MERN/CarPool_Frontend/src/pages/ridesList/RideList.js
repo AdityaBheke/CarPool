@@ -3,8 +3,11 @@ import RideCard from "../../components/rideCard/RideCard";
 import { useRideContext } from "../../context/rideContext"
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Alert from '../../components/alert/Alert';
+import { useAuthContext } from '../../context/authContext';
 
 export default function RidesList({type}) {
+  const { errorMessage } = useAuthContext();
     const {rides, fetchRideHistory} = useRideContext();
     const navigate = useNavigate();
     const {searchData} = useRideContext();
@@ -20,6 +23,7 @@ export default function RidesList({type}) {
     },[navigate])
     return (
       <div className={styles.main}>
+        {errorMessage?.message && <Alert navigate={navigate}/>}
         <div className={styles.header}>
           {type==="result" && <button onClick={goBack} className={styles.backButton}>
             <i className={`fi fi-sr-angle-left ${styles.icon}`}></i>

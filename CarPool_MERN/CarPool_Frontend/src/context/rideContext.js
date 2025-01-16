@@ -11,7 +11,7 @@ export const useRideContext = ()=>{
 
 export function RideContextProvider({children}){
     // const backendUrls = process.env.REACT_APP_BACKEND_URL;
-    const {token} = useAuthContext();
+    const {token, composeErrorMessage} = useAuthContext();
     const [rides, setRides] = useState([]);
     const [rideDetails, setRideDetails] = useState(null);
     // Set default date
@@ -55,6 +55,7 @@ export function RideContextProvider({children}){
               setRides(data.rides);
             }
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response?.data || error.message || error);
         }
     }
@@ -83,6 +84,7 @@ export function RideContextProvider({children}){
             });
             resetPublishData();
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response?.data || error.message || error);
         }
     }
@@ -121,6 +123,7 @@ export function RideContextProvider({children}){
             })
             resetPublishData();
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response?.data || error.message || error);
         }
     }
@@ -138,9 +141,10 @@ export function RideContextProvider({children}){
                 setRides(data.rides);
             }
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response?.data || error.message || error);
         }
-    },[token])
+    },[token, composeErrorMessage])
 
     const fetchRideDetails = useCallback(async (rideId)=>{
         try {
@@ -158,9 +162,10 @@ export function RideContextProvider({children}){
                 setRideDetails(data.ride);
             }
         } catch (error) {
+            composeErrorMessage(error)
             console.log(error.response?.data || error.message || error);
         }
-    },[token])
+    },[token, composeErrorMessage])
 
     const changeRideStatus = useCallback(async (rideId, status)=>{
         try {
@@ -179,9 +184,10 @@ export function RideContextProvider({children}){
             setRideDetails(data.ride)
           }
         } catch (error) {
+            composeErrorMessage(error)
           console.log(error.response?.data || error.message || error);
         }
-    },[token])
+    },[token, composeErrorMessage])
 
     const getCoords = useCallback(()=>{
         return new Promise((res, rej)=>{
@@ -204,11 +210,12 @@ export function RideContextProvider({children}){
                 }
             });
             console.log(response.data);
-            
+            composeErrorMessage({response:{status:200, data:{message: "Location sent successfully"}}})
         } catch (error) {
+            composeErrorMessage(error)
           console.log(error.response.data.errorCode+" : "+error.response.data.message);
         }
-      },[token,getCoords])
+      },[token,getCoords, composeErrorMessage])
 
     return (
       <rideContext.Provider

@@ -9,7 +9,7 @@ export const useBookingContext = ()=>{
 }
 
 export function BookingContextProvider({children}){
-    const {token} = useAuthContext();
+    const {token, composeErrorMessage} = useAuthContext();
     const [allPassengers, setAllPassengers] = useState([]);
 
     const handleOnChangePassenger = useCallback((e, index)=>{
@@ -46,9 +46,10 @@ export function BookingContextProvider({children}){
         console.log("Booking Response", response.data);
         
       } catch (error) {
+        composeErrorMessage(error)
         console.log(error.response?.data || error.message || error);
       }
-    },[allPassengers, token]);
+    },[allPassengers, token, composeErrorMessage]);
 
     const updateBooking = useCallback(async(rideId, bookingId)=>{
       try {
@@ -66,9 +67,10 @@ export function BookingContextProvider({children}){
         console.log("Update Response", response.data);
         
       } catch (error) {
+        composeErrorMessage(error)
         console.log(error.response?.data || error.message || error);
       }
-    },[allPassengers, token])
+    },[allPassengers, token, composeErrorMessage])
 
     const cancelBooking = useCallback(async (rideId, bookingId)=>{
       try {
@@ -80,9 +82,10 @@ export function BookingContextProvider({children}){
         })
         console.log("Cancel Resoponse", response.data);
       } catch (error) {
+        composeErrorMessage(error)
         console.log(error.response?.data || error.message || error);
       }
-    },[token])
+    },[token, composeErrorMessage])
 
     return (
       <bookingContext.Provider
