@@ -23,7 +23,7 @@ class userController{
             const checkPassword = await bcrypt.compare( password, result.user.password);
             delete result.user.password;
             if (checkPassword) {
-                const token = jwt.sign({userId: result.user._id}, 'secret', { expiresIn: "30m" });
+                const token = jwt.sign({userId: result.user._id}, 'secret', { expiresIn: "7d" });
                 res.cookie("jwtToken", token);
                 res.status(200).json({...result, token});
             }else{
