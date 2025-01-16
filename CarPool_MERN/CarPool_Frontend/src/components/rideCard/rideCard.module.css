@@ -7,6 +7,7 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 0.5rem;
 }
 .rideCard:hover{
@@ -16,8 +17,6 @@
     display: flex;
     font-size: 1.2rem;
     font-weight: 600;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--background);
 }
 .routeInfo{
     flex-grow: 1;
@@ -33,11 +32,18 @@
 .footer{
     display: flex;
     justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--background);
 }
 .driverInfo{
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+.driverInfo i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .status{
     text-transform: capitalize;
