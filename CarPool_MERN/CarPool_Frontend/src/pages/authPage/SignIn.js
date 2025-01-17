@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './authPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
@@ -6,6 +6,7 @@ import { useForm } from '../../hooks/useForm';
 import Alert from '../../components/alert/Alert';
 
 export default function AuthPage() {
+    const [loading, setLoading] = useState(false);
     const [signInData, setSignInData] = useForm({
         email: "",
         password: "",
@@ -16,8 +17,16 @@ export default function AuthPage() {
 
     const handleOnSubmit = useCallback(async(e)=>{
         e.preventDefault();
+        setLoading(true);
+        try {
             const result = await signInUser(signInData);
             result && navigate('/')
+        } catch (error) {
+            console.log('Error while signing in');
+        }finally{
+            setLoading(false);
+        }
+            
     },[navigate, signInData, signInUser])
 
     const handleCancel = useCallback((e)=>{
@@ -26,7 +35,6 @@ export default function AuthPage() {
     },[navigate]);
     useEffect(()=>{
         return ()=>{
-            console.log('page unnmounted');
             setErrorMessage(null)
         }
     },[setErrorMessage])
@@ -43,7 +51,7 @@ export default function AuthPage() {
                 <input type='password' id='password' required placeholder='Enter password' value={signInData.password} onChange={setSignInData} className={styles.formInput}/>
             </div>
             <div className={styles.buttonContainer}>
-                <button type='submit' className={`${styles.button} ${styles.submitButton}`}>Sign in</button>
+                <button type='submit' className={`${styles.button} ${styles.submitButton}`}>{loading?<i className="fi fi-sr-loading"></i>:'Sign in'}</button>
                 <button className={styles.button} onClick={handleCancel}>Cancel</button>
             </div>
             <div className={styles.switchMessage}>Already registered? <Link to={'/signup'}>Sign up</Link> here.</div>

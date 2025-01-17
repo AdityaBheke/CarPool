@@ -1,11 +1,15 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './rideDetails.module.css';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import { useAuthContext } from '../../context/authContext';
 import { useBookingContext } from '../../context/bookingContext';
 import Alert from '../../components/alert/Alert';
 export default function RideDetails(){
+    const [startRideLoading, setStartRideLoading] = useState(false);
+    const [cancelRideLoading, setCancelRideLoading] = useState(false);
+    const [finishRideLoading, setFinishRideLoading] = useState(false);
+    const [sendSOSLoading, setSendSOSLoading] = useState(false);
     const {user, errorMessage} = useAuthContext();
     const {rideId} = useParams();
     const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData, sendSOS} = useRideContext();
@@ -30,35 +34,71 @@ export default function RideDetails(){
     const handleCancelBooking = useCallback(async(e)=>{
         const booking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
             if (booking) {
+              setCancelRideLoading(true)
+              try {
                 await cancelBooking(rideDetails._id, booking.bookingId)
                 navigate(-1);
+              } catch (error) {
+                
+              }finally{
+                setCancelRideLoading(false)
+              }
+                
             }
     },[navigate,cancelBooking, rideDetails, user])
     const handleUpdateRide = useCallback(()=>{
         setUpdateData();
         navigate("/updateRide")
     },[navigate,setUpdateData])
-    const handleStartRide = useCallback(()=>{
-        // call startRide function
-        changeRideStatus(rideId, "started")
+    const handleStartRide = useCallback(async()=>{
+      setStartRideLoading(true);
+      try {
+        await changeRideStatus(rideId, "started")
+      } catch (error) {
+        
+      }finally{
+        setStartRideLoading(false)
+      }
+        
     },[changeRideStatus,rideId])
-    const handleCancelRide = useCallback(()=>{
-        // call cancelRide function
-        changeRideStatus(rideId, "cancelled")
+    const handleCancelRide = useCallback(async()=>{
+      setCancelRideLoading(true)
+      try {
+        await changeRideStatus(rideId, "cancelled")
+      } catch (error) {
+        
+      }finally{
+        setCancelRideLoading(false)
+      }
+        
     },[changeRideStatus,rideId])
-    const handleFinishRide = useCallback(()=>{
-        // call finishRide function
-        changeRideStatus(rideId, "completed")
+    const handleFinishRide = useCallback(async()=>{
+      setFinishRideLoading(true)
+      try {
+        await changeRideStatus(rideId, "completed")
+      } catch (error) {
+        
+      }finally{
+        setFinishRideLoading(false)
+      }
+        
     },[changeRideStatus,rideId])
 
     const handleOpenMap = useCallback(()=>{
       navigate('/map');
     },[navigate])
 
-    const handleSOS = useCallback(()=>{
+    const handleSOS = useCallback(async()=>{
       if (user?.emergencyContacts?.length>0) {
-        // Send SOS function
-        sendSOS(rideId);
+        setSendSOSLoading(true);
+        try {
+          await sendSOS(rideId);
+        } catch (error) {
+          
+        }finally{
+          setSendSOSLoading(false);
+        }
+        
       }else{
         navigate('/addEmergency')
       }
@@ -212,14 +252,14 @@ export default function RideDetails(){
           {rideDetails?.status === "active" ? (
             user._id === rideDetails?.driverId._id ? (
               <>
-                <button onClick={handleCancelRide} className={`${styles.button} ${styles.cancelButton}`}>Cancel Ride</button>
+                <button onClick={handleCancelRide} className={`${styles.button} ${styles.cancelButton}`}>{cancelRideLoading?<i className="fi fi-sr-loading"></i>:'Cancel Ride'}</button>
                 <button onClick={handleUpdateRide} className={`${styles.button} ${styles.updateButton}`}>Update</button>
-                <button onClick={handleStartRide} className={styles.button}>Start</button>
+                <button onClick={handleStartRide} className={styles.button}>{startRideLoading?<i className="fi fi-sr-loading"></i>:'Start'}</button>
               </>
             ) : (
               rideDetails?.passengers?.find((booking)=>booking.primaryPassenger===user._id) ?(
               <>
-                <button onClick={handleCancelBooking} className={`${styles.button} ${styles.cancelButton}`}>Cancel Booking</button>
+                <button onClick={handleCancelBooking} className={`${styles.button} ${styles.cancelButton}`}>{cancelRideLoading?<i className="fi fi-sr-loading"></i>:'Cancel Booking'}</button>
                 <button onClick={handleUpdateBooking} className={styles.button}>Update Booking</button>
               </> ):(
                 <><button onClick={handleBookRide} className={styles.button}>Book Ride</button></>
@@ -229,12 +269,12 @@ export default function RideDetails(){
             user._id === rideDetails?.driverId._id ? (
               <>
                 <button onClick={handleOpenMap} className={`${styles.button} ${styles.updateButton}`}>Open Map</button>
-                <button onClick={handleFinishRide} className={styles.button}>Finish Ride</button>
+                <button onClick={handleFinishRide} className={styles.button}>{finishRideLoading?<i className="fi fi-sr-loading"></i>:'Finish Ride'}</button>
               </>
             ) : (
               rideDetails?.passengers?.find((booking)=>booking.primaryPassenger===user._id)?(<>
                 <button onClick={handleOpenMap} className={`${styles.button} ${styles.updateButton}`}>Open Map</button>
-                <button onClick={handleSOS} className={`${styles.button} ${styles.cancelButton}`}>SOS</button>
+                <button onClick={handleSOS} className={`${styles.button} ${styles.cancelButton}`}>{sendSOSLoading?<i className="fi fi-sr-loading"></i>:'SOS'}</button>
               </>):(
                 <div className={styles.statusMessage}>{rideDetails?.status}</div>
               )

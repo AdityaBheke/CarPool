@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './authPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
@@ -6,6 +6,7 @@ import { useForm } from '../../hooks/useForm';
 import Alert from '../../components/alert/Alert';
 
 export default function AuthPage() {
+    const [loading, setLoading] = useState(false);
     const [signUpData, setSignUpData] = useForm({
             name: "",
             email: "",
@@ -20,18 +21,24 @@ export default function AuthPage() {
 
     const handleOnSubmit = useCallback(async (e)=>{
         e.preventDefault();
+        setLoading(true)
+        try {
             const result = await signUpUser(signUpData);
             result && navigate('/signin')
+        } catch (error) {
+            console.log('Error while signing up');
+        }finally{
+            setLoading(false)
+        }
     },[navigate, signUpData, signUpUser])
 
     const handleCancel = useCallback((e)=>{
         e.preventDefault();
         navigate('/welcome');
     },[navigate]);
-    // if (errorMessage) return <Alert/>
+
     useEffect(()=>{
             return ()=>{
-                console.log('page unnmounted');
                 setErrorMessage(null)
             }
         },[setErrorMessage])
@@ -69,7 +76,7 @@ export default function AuthPage() {
                 </select>
             </div>
             <div className={styles.buttonContainer}>
-                <button type='submit' className={`${styles.button} ${styles.submitButton}`}>Sign up</button>
+                <button type='submit' className={`${styles.button} ${styles.submitButton}`}>{loading?<i className="fi fi-sr-loading"></i>:'Sign up'}</button>
                 <button className={styles.button} onClick={handleCancel}>Cancel</button>
             </div>
             <div className={styles.switchMessage}>Already registered? <Link to={'/signin'}>Sign in</Link> here.</div>

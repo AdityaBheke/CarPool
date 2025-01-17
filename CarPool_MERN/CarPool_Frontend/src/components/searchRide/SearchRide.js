@@ -1,19 +1,27 @@
 import styles from './searchRide.module.css';
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRideContext } from '../../context/rideContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchRide() {
-
+  const [loading, setLoading] = useState(false);
   const {searchRides, searchData, setSearchData, setDate} = useRideContext();
   const navigate = useNavigate();
 
   // const [searchData, handleOnChange] = useForm(searchData);
 
-  const handleSubmit = useCallback((e)=>{
+  const handleSubmit = useCallback(async(e)=>{
     e.preventDefault();
-    searchRides(searchData);
-    navigate('/rides')
+    setLoading(true)
+    try {
+      await searchRides(searchData);
+      navigate('/rides')
+    } catch (error) {
+      
+    }finally{
+      setLoading(false)
+    }
+    
   },[searchData, searchRides, navigate])
 
   const searchLocation = useCallback((e)=>{
@@ -76,7 +84,7 @@ export default function SearchRide() {
         className={styles.formInput}
       />
       </div>
-      <button type='submit' className={styles.search}>Search</button>
+      <button type='submit' className={styles.search}>{loading?<i className="fi fi-sr-loading"></i>:'Search'}</button>
     </form>
   );
 }

@@ -7,6 +7,7 @@ import { useAuthContext } from '../../context/authContext';
 import Alert from '../../components/alert/Alert';
 
 export default function Booking({type}) {
+  const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [availableSlots, setAvailableSlots] = useState(1);
     const {user, errorMessage} = useAuthContext();
@@ -31,7 +32,9 @@ export default function Booking({type}) {
 
     const handleOnSubmit=useCallback(async(e)=>{
         e.preventDefault();
-        if (type==='update') {
+        setLoading(true)
+        try {
+          if (type==='update') {
             const booking = rideDetails.passengers.find((booking)=>booking.primaryPassenger===user._id);
             if (booking) {
                 await updateBooking(rideDetails._id, booking.bookingId)
@@ -41,6 +44,12 @@ export default function Booking({type}) {
             await bookRide(rideDetails._id)
             navigate('/myrides')
         }
+        } catch (error) {
+          
+        }finally{
+          setLoading(false)
+        }
+        
     },[type, bookRide, rideDetails, navigate, updateBooking, user])
 
     const addPassengers = useCallback(()=>{
@@ -213,7 +222,7 @@ export default function Booking({type}) {
               type="submit"
               className={`${styles.button} ${styles.submitButton}`}
             >
-              {type}
+              {loading?<i className="fi fi-sr-loading"></i>:type}
             </button>
           </div>
         </form>

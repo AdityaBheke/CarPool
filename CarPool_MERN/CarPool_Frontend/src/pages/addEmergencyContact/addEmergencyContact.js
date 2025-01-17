@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './addEmergency.module.css';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from '../../context/authContext';
 import Alert from '../../components/alert/Alert';
 export default function AddEmergencyContacts(){
+  const [loading, setLoading] = useState(false);
   const {user, emergencyContacts, setEmergencyContacts, handleOnChange, updateEmergencyContacts, errorMessage} = useAuthContext();
     const navigate = useNavigate();
     const goBack = useCallback(()=>{
@@ -12,8 +13,16 @@ export default function AddEmergencyContacts(){
         
     const handleOnSubmit = useCallback(async(e)=>{
       e.preventDefault();
-      await updateEmergencyContacts();
-      navigate(-1);
+      setLoading(true)
+      try {
+        await updateEmergencyContacts();
+        navigate(-1);
+      } catch (error) {
+        
+      }finally{
+        setLoading(false)
+      }
+      
     },[updateEmergencyContacts, navigate])
     const handleAddMore = useCallback(()=>{
       setEmergencyContacts([...emergencyContacts, {friendlyName:"", email:"", contact:""}])
@@ -47,7 +56,7 @@ export default function AddEmergencyContacts(){
           </div>)}
           <div className={styles.buttonContainer}>
             {emergencyContacts.length<2 && <button type='submit' onClick={handleAddMore} className={`${styles.button} ${styles.addButton}`}>Add more</button>}
-            <button type='submit' className={styles.button}>Update contacts</button>
+            <button type='submit' className={styles.button}>{loading?<i className="fi fi-sr-loading"></i>:'Update contacts'}</button>
           </div>
         </form>
 

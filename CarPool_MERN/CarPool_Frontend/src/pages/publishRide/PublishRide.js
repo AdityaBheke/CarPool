@@ -1,24 +1,33 @@
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useRideContext } from '../../context/rideContext';
 import styles from './publishRide.module.css';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/alert/Alert';
 import { useAuthContext } from '../../context/authContext';
 export default function PublishRide({type}) {
+    const [loading, setLoading] = useState(false);
     const {errorMessage} = useAuthContext();
     const {setDate, publishData, setPublishData, publishRide, resetPublishData, updateRide} = useRideContext();
     const navigate = useNavigate();
 
     const handleOnSubmit=useCallback(async(e)=>{
         e.preventDefault();
-        if (type==='update') {
-            await updateRide(publishData);
-            navigate(-1)
-        } else if(type==='publish'){
-            await publishRide(publishData);
-            navigate('/myrides')
+        setLoading(true)
+        try {
+            if (type==='update') {
+                await updateRide(publishData);
+                navigate(-1)
+            } else if(type==='publish'){
+                await publishRide(publishData);
+                navigate('/myrides')
+            }
+        } catch (error) {
+            
+        }finally{
+            setLoading(false)
         }
+        
     },[publishRide, publishData, navigate, type, updateRide])
 
     const handleOnReset = useCallback((e)=>{
@@ -100,7 +109,7 @@ export default function PublishRide({type}) {
         
         <div className={styles.buttonContainer}>
             <button type='reset' className={styles.button}>Reset</button>
-            <button type='submit' className={`${styles.button} ${styles.submitButton}`}>{type}</button>
+            <button type='submit' className={`${styles.button} ${styles.submitButton}`}>{loading?<i className="fi fi-sr-loading"></i>:type}</button>
         </div>
     </form>
 </div>
