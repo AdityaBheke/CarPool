@@ -130,10 +130,11 @@ export function RideContextProvider({children}){
 
     const fetchRideHistory= useCallback(async()=>{
         try {
+            const prevToken = localStorage.getItem('token') || token;
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/api/ride`,{
                 headers:{
-                    Authorization: token
+                    Authorization: prevToken
                 }
             });
             const data = response.data;
