@@ -73,7 +73,7 @@ export function AuthContextProvider({children}){
         console.log("User Data",userDetails);
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
         try {
-          const response = await axios.post(`${baseUrl}/users/signup`,{
+          const response = await axios.post(`${baseUrl}/api/users/signup`,{
             ...userDetails
           });
           const data = response.data;
@@ -94,7 +94,7 @@ export function AuthContextProvider({children}){
         console.log("User Credentials",userCredentials);
         const baseUrl = process.env.REACT_APP_BACKEND_URL;
         try {
-          const response = await axios.post(`${baseUrl}/users/signin`,{
+          const response = await axios.post(`${baseUrl}/api/users/signin`,{
             ...userCredentials
           });
           const data = response.data;
@@ -136,7 +136,7 @@ export function AuthContextProvider({children}){
     const updateEmergencyContacts = useCallback(async()=>{
       try {
         const backendURL = process.env.REACT_APP_BACKEND_URL;
-        const response = await axios.put(`${backendURL}/users/edit`,{
+        const response = await axios.put(`${backendURL}/api/users/edit`,{
           emergencyContacts: emergencyContacts
         },{
           headers:{

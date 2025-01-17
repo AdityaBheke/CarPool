@@ -34,7 +34,7 @@ export function BookingContextProvider({children}){
         console.log("Ride Id", rideId);
         console.log("all passengers", allPassengers);
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
-        const response = await axios.post(`${backendUrl}/booking`,{
+        const response = await axios.post(`${backendUrl}/api/booking`,{
           rideId:rideId,
           totalPassengers: allPassengers.length,
           allPassengers: allPassengers
@@ -55,7 +55,7 @@ export function BookingContextProvider({children}){
       try {
         console.log(rideId, bookingId);
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
-        const response = await axios.put(`${backendUrl}/booking/${bookingId}`,{
+        const response = await axios.put(`${backendUrl}/api/booking/${bookingId}`,{
           rideId: rideId,
           totalPassengers: allPassengers.length,
           allPassengers: allPassengers
@@ -75,7 +75,7 @@ export function BookingContextProvider({children}){
     const cancelBooking = useCallback(async (rideId, bookingId)=>{
       try {
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
-        const response = await axios.put(`${backendUrl}/booking/cancel/${bookingId}`,{},{
+        const response = await axios.put(`${backendUrl}/api/booking/cancel/${bookingId}`,{},{
           headers:{
             Authorization: token
           }

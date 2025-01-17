@@ -44,7 +44,7 @@ export function RideContextProvider({children}){
     const searchRides = async (criteria)=>{
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/ride/filter`, {
+            const response = await axios.get(`${backendUrl}/api/ride/filter`, {
                 params: criteria,
                 headers: {
                     Authorization: token, 
@@ -77,7 +77,7 @@ export function RideContextProvider({children}){
     const publishRide = async (rideData)=>{
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            await axios.post(`${backendUrl}/ride`, rideData,{
+            await axios.post(`${backendUrl}/api/ride`, rideData,{
                 headers:{
                     Authorization: token
                 }
@@ -116,7 +116,7 @@ export function RideContextProvider({children}){
     const updateRide = async(updateData)=>{
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            await axios.put(`${backendUrl}/ride/${updateData.rideId}`, updateData,{
+            await axios.put(`${backendUrl}/api/ride/${updateData.rideId}`, updateData,{
                 headers:{
                     Authorization:token
                 }
@@ -131,7 +131,7 @@ export function RideContextProvider({children}){
     const fetchRideHistory= useCallback(async()=>{
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/ride`,{
+            const response = await axios.get(`${backendUrl}/api/ride`,{
                 headers:{
                     Authorization: token
                 }
@@ -149,7 +149,7 @@ export function RideContextProvider({children}){
     const fetchRideDetails = useCallback(async (rideId)=>{
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/ride/${rideId}`,{
+            const response = await axios.get(`${backendUrl}/api/ride/${rideId}`,{
                 headers:{
                     Authorization: token
                 }
@@ -171,7 +171,7 @@ export function RideContextProvider({children}){
         try {
           const backendUrl = process.env.REACT_APP_BACKEND_URL;
           const response = await axios.put(
-            `${backendUrl}/ride/updateStatus/${rideId}`,
+            `${backendUrl}/api/ride/updateStatus/${rideId}`,
             { status },
             {
               headers: {
@@ -199,7 +199,7 @@ export function RideContextProvider({children}){
         try {
             const position = await getCoords();
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            const response = await axios.get(`${backendUrl}/ride/emergency`,{
+            const response = await axios.get(`${backendUrl}/api/ride/emergency`,{
                 params:{
                     rideId: rideId,
                     lat: position.coords.latitude,

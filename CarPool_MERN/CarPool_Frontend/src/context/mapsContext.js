@@ -20,7 +20,7 @@ export function MapContextProvider({children}){
             return;
         }
         try {
-            const response = await axios.get(`${baseUrl}/map/prediction`,{params:{
+            const response = await axios.get(`${baseUrl}/api/map/prediction`,{params:{
                 input:place
             }})
             const data = response.data;
