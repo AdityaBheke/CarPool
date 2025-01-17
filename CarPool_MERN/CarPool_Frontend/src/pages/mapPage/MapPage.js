@@ -3,7 +3,7 @@ import styles from './mapPage.module.css';
 import { useRideContext } from './../../context/rideContext'
 import { socket } from '../../socket/socket';
 import {useAuthContext} from './../../context/authContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GoogleMap, Marker, useLoadScript, DirectionsRenderer, MarkerClusterer } from '@react-google-maps/api';
 import Alert from '../../components/alert/Alert';
 export default function MapPage() {
@@ -11,19 +11,26 @@ export default function MapPage() {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
     })
     const navigate = useNavigate();
-    const {rideDetails} = useRideContext();
+    const {rideId} = useParams();
+    const {fetchRideDetails, rideDetails} = useRideContext();
     const {user, errorMessage} = useAuthContext();
     const [location, setLocation] = useState({lat: 0, lng: 0});
     const [otherLocations, setOtherLocations] = useState([]);
     const [route, setRoute] = useState(null);
 
+    useEffect(()=>{
+      fetchRideDetails(rideId);
+  },[fetchRideDetails, rideId]);
+
     // Emit/send updated coords to server with roomId
     const refreshLocation = useCallback(({lat, lng})=>{
+      if(!rideDetails || !rideDetails._id)return
       socket.emit('locationUpdate', {rideId: rideDetails._id, lat: lat, lng: lng, name:user.name})
     },[rideDetails, user])
 
     // Join Room related to specific ride on page load;
     useEffect(()=>{
+      if(!rideDetails || !rideDetails._id)return
         socket.emit('joinRoom', rideDetails._id)
 
         return ()=>{
@@ -90,6 +97,7 @@ export default function MapPage() {
 
     // Fetch directions from directionService
     useEffect(()=>{
+      if(!rideDetails)return
       if (isLoaded && window.google) {
         const fetchDirection = () => {
           const directionService = new window.google.maps.DirectionsService();

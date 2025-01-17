@@ -85,8 +85,8 @@ export default function RideDetails(){
     },[changeRideStatus,rideId])
 
     const handleOpenMap = useCallback(()=>{
-      navigate('/map');
-    },[navigate])
+      navigate(`/map/${rideId}`);
+    },[navigate, rideId])
 
     const handleSOS = useCallback(async()=>{
       if (user?.emergencyContacts?.length>0) {

@@ -90,7 +90,7 @@ export const browserRouter = createBrowserRouter([
       path:'/addEmergency',
       element: <AddEmergencyContacts />
     },{
-      path:'/map',
+      path:'/map/:rideId',
       element:<MapPage />
     }
   ]);
