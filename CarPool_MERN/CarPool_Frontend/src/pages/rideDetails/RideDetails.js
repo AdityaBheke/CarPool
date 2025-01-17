@@ -6,6 +6,7 @@ import { useAuthContext } from '../../context/authContext';
 import { useBookingContext } from '../../context/bookingContext';
 import Alert from '../../components/alert/Alert';
 export default function RideDetails(){
+  const[loading, setLoading] = useState(false);
     const [startRideLoading, setStartRideLoading] = useState(false);
     const [cancelRideLoading, setCancelRideLoading] = useState(false);
     const [finishRideLoading, setFinishRideLoading] = useState(false);
@@ -15,9 +16,19 @@ export default function RideDetails(){
     const {fetchRideDetails, rideDetails, changeRideStatus, getTimeFromDate, setUpdateData, sendSOS} = useRideContext();
     const {cancelBooking} = useBookingContext();
     const navigate = useNavigate();
+    const fetchRide = useCallback(async(id)=>{
+      setLoading(true)
+      try {
+        await fetchRideDetails(id);
+      } catch (error) {
+        
+      }finally{
+        setLoading(false)
+      }
+    },[fetchRideDetails])
     useEffect(()=>{
-        fetchRideDetails(rideId);
-    },[fetchRideDetails, rideId]);
+        fetchRide(rideId)
+    },[fetchRide, rideId]);
 
     const goBack = useCallback(()=>{
             navigate(-1);
@@ -103,8 +114,6 @@ export default function RideDetails(){
         navigate('/addEmergency')
       }
     },[navigate, user, sendSOS, rideId])
-    
-
     return (
       <>
         <div className={styles.main}>
@@ -115,7 +124,8 @@ export default function RideDetails(){
             </button>
             <div className={styles.pageHead}>Ride Details</div>
           </div>
-          <div className={styles.infoContainer}>
+          {loading ? (<div className={styles.loadingMessage}>Fetching ride details...</div>):
+          (<div className={styles.infoContainer}>
             {/* Route Info */}
           <div className={styles.rideInfo}>
             <div className={styles.containerHead}>Route</div>
@@ -245,9 +255,9 @@ export default function RideDetails(){
                 : "No Passengers Found"}
             </div>
           </div>
-          </div>
+          </div>)}
         </div>
-        <div className={styles.rideActions}>
+        {!loading && <div className={styles.rideActions}>
           <div className={styles.buttonContainer}>
           {rideDetails?.status === "active" ? (
             user._id === rideDetails?.driverId._id ? (
@@ -284,7 +294,7 @@ export default function RideDetails(){
           )}
         
           </div>
-        </div>
+        </div>}
       </>
     );
 }
