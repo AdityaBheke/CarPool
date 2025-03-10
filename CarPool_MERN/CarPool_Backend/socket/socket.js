@@ -6,6 +6,7 @@ const setUpSocket = (server) => {
       origin: frontEndUrl,
       methods: ["GET", "POST"],
     },
+    transports: ["websocket", "polling"],
   });
   io.on("connection", (socket) => {
     // console.log("User connected: ", socket.id);
