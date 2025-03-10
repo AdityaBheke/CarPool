@@ -48,7 +48,7 @@ export default function RidesList({type}) {
         </div>
         <div className={styles.ridesList}>
           {loading ? (
-            <div className={styles.noDataFound}>Fetching ride history...</div>
+            <div className={`${styles.noDataFound} ${styles.loading}`}>Fetching ride history...</div>
           ) : rides.length > 0 ? (
             rides.map((ride) => <RideCard key={ride._id} ride={ride} />)
           ) : (

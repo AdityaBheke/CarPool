@@ -46,7 +46,17 @@
     color: var(--background);
     padding-top: 2rem;
 }
-
+.loading{
+    animation: fadeIn 0.7s ease-in-out infinite alternate;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0.3;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 @media screen and (min-width: 750px) {
     .main{
