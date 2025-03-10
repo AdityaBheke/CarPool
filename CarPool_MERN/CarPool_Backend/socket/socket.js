@@ -7,7 +7,8 @@ const setUpSocket = (server) => {
       methods: ["GET", "POST"],
       credentials: true,
     },
-    transports: ["websocket", "polling"],
+    transports: ["polling"], // Force long polling (disable WebSockets)
+    allowEIO3: true, // Support older socket.io clients
   });
   io.on("connection", (socket) => {
     // console.log("User connected: ", socket.id);
