@@ -1,11 +1,13 @@
-import nodeMailer from 'nodemailer';
-import {customError} from './../../middlewares/errorhandler.middleware.js'
-import dotenv from 'dotenv';
+const nodeMailer = require('nodemailer');
+const dotenv = require('dotenv');
+const { customError } = require('../../middlewares/errorhandler.middleware.js');
+
 dotenv.config();
+
 const senderEmail = process.env.SENDER_EMAIL_ID;
 const senderPass = process.env.SENDER_EMAIL_PASS;
 
-export const sendEmail = async (receiver, subject, message)=>{
+const sendEmail = async (receiver, subject, message) => {
     const transport = nodeMailer.createTransport({
         service: 'gmail',
         auth: {
@@ -15,7 +17,7 @@ export const sendEmail = async (receiver, subject, message)=>{
     });
 
     const mailOptions = {
-        from: `Car Buddy ${senderEmail}` ,
+        from: `Car Buddy ${senderEmail}`,
         to: receiver,
         subject: subject,
         text: message
@@ -27,4 +29,6 @@ export const sendEmail = async (receiver, subject, message)=>{
     } catch (error) {
         throw new customError(500, error.message || 'Error while sending email');
     }
-}
+};
+
+module.exports = {sendEmail};
