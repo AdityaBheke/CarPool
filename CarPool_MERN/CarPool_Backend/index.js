@@ -15,12 +15,17 @@ const http = require('http');
 require('dotenv').config(); 
 const app = express();
 const port = process.env.PORT || 3000;
+const frontEndUrl = process.env.FRONTEND_URL;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+    origin: frontEndUrl,
+    methods: ["GET", "POST"],
+    credentials: true, // ✅ Allow sending cookies & authentication headers
+  }));
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
