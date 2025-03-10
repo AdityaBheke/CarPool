@@ -5,8 +5,8 @@ const setUpSocket = (server) => {
     cors: {
       origin: frontEndUrl,
       methods: ["GET", "POST"],
+      credentials: true,
     },
-    credentials: true,
     transports: ["websocket", "polling"],
   });
   io.on("connection", (socket) => {
