@@ -24,9 +24,9 @@ app.use(cookieParser());
 app.use(cors({
     origin: frontEndUrl,
     methods: ["GET", "POST"],
-    credentials: true, // ✅ Allow sending cookies & authentication headers
+    credentials: true, // Allow sending cookies & authentication headers
   }));
-
+  app.options("*", cors()); // Allows preflight requests for all routes
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
