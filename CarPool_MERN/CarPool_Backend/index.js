@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 app.use(cors({
     origin: frontEndUrl,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow sending cookies & authentication headers
   }));
   app.options("*", cors()); // Allows preflight requests for all routes
