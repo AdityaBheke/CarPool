@@ -3,6 +3,7 @@ const {customError} = require('../middlewares/errorhandler.middleware')
 const userServices = require('./user.services')
 const bookingSchema = require('../models/booking.model');
 const rideServices = require('./ride.services');
+const {sendEmail} = require('./../utils/email/emergencyEmail');
 
 const Booking = mongoose.model("Booking", bookingSchema);
 const bookingServices = {
@@ -37,6 +38,30 @@ const bookingServices = {
             await rideServices.updatePassengers(userId, bookingData.rideId, booking._id, booking.allPassengers);
             // Save booking to database
             const createdBooking = await booking.save();
+            
+            // Booking confirmation email
+            const subject = "Your Carpool Booking is Confirmed!";
+            const message = `Hi ${isValidUser.name},
+
+Thank you for using our Carpool service! Your booking has been successfully confirmed. Here are the details of your ride:
+
+Ride Details:
+- From: ${ride.startLocation.address}
+- To: ${ride.endLocation.address}
+- Date: ${(new Date(ride.startTime)).toISOString().split("T")[0]}
+- Time: ${(new Date(ride.startTime)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+- Driver: ${ride.driverId.name}
+- Contact: ${ride.driverId.mobile}
+
+Booking Information:
+- Booking ID: ${booking._id.toString()}
+- Seats Booked: ${booking.totalPassengers}
+- Fare Per Person: ₹${ride.farePerPerson}
+
+We wish you a safe and comfortable journey! 😊
+
+— Team Carpool`;
+            sendEmail(isValidUser.email, subject, message);
             // return created booking
             return {success: true, booking: createdBooking};
         } catch (error) {
